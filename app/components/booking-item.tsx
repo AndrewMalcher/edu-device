@@ -25,7 +25,6 @@ const BookingItem = () => {
               <p className="border-r-2 border-solid px-1 text-sm">
                 Faculdade La Salle
               </p>
-              {/*to do : receber sala como prop*/}
               <p className="px-2">301C</p>
             </div>
           </div>

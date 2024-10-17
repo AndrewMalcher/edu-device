@@ -21,11 +21,28 @@ const Home = async () => {
       <div className="p-5">
         <h2 className="text-xl font-bold">Olá, Andrew!</h2>
         <p>Segunda-fera, 05 de agosto.</p>
+
         {/* BUSCA */}
         <div className="mt-6 flex items-center gap-2">
           <Input type="text" placeholder="Pesquisar..." />
           <Button>
             <SearchIcon />
+          </Button>
+        </div>
+
+        {/* QUICKSEARCH */}
+        <div className="flex gap-3">
+          <Button className="gap-2" variant="secondary">
+            CHROMEBOOKS
+          </Button>
+          <Button className="gap-2" variant="secondary">
+            IPADS
+          </Button>
+          <Button className="gap-2" variant="secondary">
+            NOTEBOOKS
+          </Button>
+          <Button className="gap-2" variant="secondary">
+            PROJETOR
           </Button>
         </div>
 
