@@ -1,6 +1,6 @@
 import { db } from "@/app/_lib/prisma"
 import { Button } from "@/app/components/ui/button"
-import { ChevronLeftIcon } from "lucide-react"
+import { ChevronLeftIcon, MenuIcon } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 
@@ -35,6 +35,10 @@ const BarbeshopPage = async ({ params }: BarbeshopPageProps) => {
           <Link href="/">
             <ChevronLeftIcon />
           </Link>
+        </Button>
+
+        <Button>
+          <MenuIcon />
         </Button>
       </div>
     </div>
