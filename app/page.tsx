@@ -31,7 +31,7 @@ const Home = async () => {
         </div>
 
         {/* QUICKSEARCH */}
-        <div className="flex gap-3">
+        <div className="mt-6 flex gap-3">
           <Button className="gap-2" variant="secondary">
             CHROMEBOOKS
           </Button>
@@ -59,13 +59,28 @@ const Home = async () => {
         {/* AGENDAMENTO */}
         <BookingItem />
 
+        {/* POPULARES */}
         <h2 className="foont-bold mb-3 mt-6 uppercase text-gray-400">
-          Recomendados
+          Faculdades
         </h2>
         <div className="flex gap-4 overflow-auto [&::-webkit-scrollbar]:hidden">
-          {barbershops.map((barbershop) => (
-            <BarbershopItem key={barbershop.id} barbershop={barbershop} />
-          ))}
+          {barbershops
+            .filter((barbershop) => barbershop.name === "Faculdade La Salle") // Filtra para mostrar apenas as barbearias com título "Faculdade La Salle"
+            .map((barbershop) => (
+              <BarbershopItem key={barbershop.id} barbershop={barbershop} />
+            ))}
+        </div>
+
+        {/* POPULARES */}
+        <h2 className="foont-bold mb-3 mt-6 uppercase text-gray-400">
+          Populares
+        </h2>
+        <div className="flex gap-4 overflow-auto [&::-webkit-scrollbar]:hidden">
+          {barbershops
+            .filter((barbershop) => barbershop.name === "Faculdade La Salle") // Filtra para mostrar apenas as barbearias com título "Faculdade La Salle"
+            .map((barbershop) => (
+              <BarbershopItem key={barbershop.id} barbershop={barbershop} />
+            ))}
         </div>
       </div>
     </div>
