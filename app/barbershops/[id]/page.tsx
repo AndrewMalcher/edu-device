@@ -15,6 +15,9 @@ const BarbeshopPage = async ({ params }: BarbershopPageProps) => {
     where: {
       id: params.id,
     },
+    include: {
+      services: true,
+    },
   })
 
   if (!barbershop) {
@@ -67,7 +70,17 @@ const BarbeshopPage = async ({ params }: BarbershopPageProps) => {
       </div>
 
       {/* SERVIÇOS */}
-      <div></div>
+      <div className="p-5">
+        <h2 className="font-bold uppercase">Serviços</h2>
+        <div className="grid grid-cols-2 gap-4 p-5">
+          {barbershop.services.map((service) => (
+            <div key={service.id} className="rounded-md bg-white p-4 shadow-md">
+              <h3 className="text-lg font-bold">{service.name}</h3>
+              <p className="text-gray-400">{service.description}</p>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   )
 }
