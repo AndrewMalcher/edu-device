@@ -11,10 +11,10 @@
       "static/css/app/layout.css",
       "static/chunks/app/layout.js"
     ],
-    "/barbeshops/[id]/page": [
+    "/barbershops/[id]/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/barbeshops/[id]/page.js"
+      "static/chunks/app/barbershops/[id]/page.js"
     ]
   }
 }
