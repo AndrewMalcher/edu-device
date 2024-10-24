@@ -9,7 +9,7 @@ import BookingItem from "./components/booking-item"
 
 const Home = async () => {
   // chamar meu banco de dados
-  const barbershops = await db.barbershop.findMany({})
+  const barbershops = await db.educationalInstitution.findMany({})
   console.log({ barbershops })
 
   return (

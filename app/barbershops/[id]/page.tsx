@@ -3,6 +3,7 @@ import { Button } from "@/app/components/ui/button"
 import { ChevronLeftIcon, MapPinIcon, MenuIcon } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
+import ServiceItem from "@/app/components/service-item"
 
 interface BarbershopPageProps {
   params: {
@@ -11,7 +12,7 @@ interface BarbershopPageProps {
 }
 
 const BarbeshopPage = async ({ params }: BarbershopPageProps) => {
-  const barbershop = await db.barbershop.findUnique({
+  const barbershop = await db.educationalInstitution.findUnique({
     where: {
       id: params.id,
     },
@@ -72,14 +73,9 @@ const BarbeshopPage = async ({ params }: BarbershopPageProps) => {
       {/* SERVIÇOS */}
       <div className="p-5">
         <h2 className="font-bold uppercase">Serviços</h2>
-        <div className="grid grid-cols-2 gap-4 p-5">
-          {barbershop.services.map((service) => (
-            <div key={service.id} className="rounded-md bg-white p-4 shadow-md">
-              <h3 className="text-lg font-bold">{service.name}</h3>
-              <p className="text-gray-400">{service.description}</p>
-            </div>
-          ))}
-        </div>
+        {barbershop.services.map((service) => (
+          <ServiceItem key={service.id} service={service} />
+        ))}
       </div>
     </div>
   )
