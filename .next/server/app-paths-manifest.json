@@ -1,3 +1,4 @@
 {
-  "/barbershops/[id]/page": "app/barbershops/[id]/page.js"
+  "/barbershops/[id]/page": "app/barbershops/[id]/page.js",
+  "/page": "app/page.js"
 }
