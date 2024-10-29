@@ -5,6 +5,8 @@ import Link from "next/link"
 import Image from "next/image"
 import ServiceItem from "@/app/components/service-item"
 import PhoneItem from "@/app/components/phone-item"
+import SidebarSheet from "@/app/components/sidebar-sheet"
+import { Sheet, SheetTrigger } from "@/app/components/ui/sheet"
 
 interface BarbershopPageProps {
   params: {
@@ -47,13 +49,18 @@ const BarbeshopPage = async ({ params }: BarbershopPageProps) => {
           </Link>
         </Button>
 
-        <Button
-          size="icon"
-          variant="secondary"
-          className="absolute right-4 top-4"
-        >
-          <MenuIcon />
-        </Button>
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button
+              size="icon"
+              variant="outline"
+              className="absolute right-4 top-4"
+            >
+              <MenuIcon />
+            </Button>
+          </SheetTrigger>
+          <SidebarSheet />
+        </Sheet>
       </div>
 
       {/* TITULO DA BARBEARIA */}
