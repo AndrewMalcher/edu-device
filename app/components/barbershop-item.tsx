@@ -1,11 +1,11 @@
-import { Barbershop } from "@prisma/client"
+import { EducationalInstitution } from "@prisma/client"
 import { Card, CardContent } from "./ui/card"
 import Image from "next/image"
 import { Button } from "./ui/button"
 import Link from "next/link"
 
 interface BarbershopItemProps {
-  barbershop: Barbershop
+  barbershop: EducationalInstitution
 }
 
 const BarbershopItem = ({ barbershop }: BarbershopItemProps) => {
@@ -17,7 +17,7 @@ const BarbershopItem = ({ barbershop }: BarbershopItemProps) => {
           <Image
             alt={barbershop.name}
             fill
-            className="rounded-2xl object-cover"
+            className="rounded-2xl object-contain"
             src={barbershop.imageUrl}
           />
         </div>

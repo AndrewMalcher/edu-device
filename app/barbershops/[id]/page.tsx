@@ -3,6 +3,10 @@ import { Button } from "@/app/components/ui/button"
 import { ChevronLeftIcon, MapPinIcon, MenuIcon } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
+import ServiceItem from "@/app/components/service-item"
+import PhoneItem from "@/app/components/phone-item"
+import SidebarSheet from "@/app/components/sidebar-sheet"
+import { Sheet, SheetTrigger } from "@/app/components/ui/sheet"
 
 interface BarbershopPageProps {
   params: {
@@ -11,7 +15,7 @@ interface BarbershopPageProps {
 }
 
 const BarbeshopPage = async ({ params }: BarbershopPageProps) => {
-  const barbershop = await db.barbershop.findUnique({
+  const barbershop = await db.educationalInstitution.findUnique({
     where: {
       id: params.id,
     },
@@ -45,13 +49,18 @@ const BarbeshopPage = async ({ params }: BarbershopPageProps) => {
           </Link>
         </Button>
 
-        <Button
-          size="icon"
-          variant="secondary"
-          className="absolute right-4 top-4"
-        >
-          <MenuIcon />
-        </Button>
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button
+              size="icon"
+              variant="outline"
+              className="absolute right-4 top-4"
+            >
+              <MenuIcon />
+            </Button>
+          </SheetTrigger>
+          <SidebarSheet />
+        </Sheet>
       </div>
 
       {/* TITULO DA BARBEARIA */}
@@ -65,21 +74,25 @@ const BarbeshopPage = async ({ params }: BarbershopPageProps) => {
 
       {/* DESCRIÇÃO */}
       <div className="space-y-2 border-b border-solid p-5">
-        <h2 className="font-bold uppercase">Sobre nós</h2>
-        <p className="text-justify text-gray-400">{barbershop.description}</p>
+        <h2 className="text-xs font-bold uppercase text-gray-400">Sobre nós</h2>
+        <p className="text-justify">{barbershop.description}</p>
       </div>
 
       {/* SERVIÇOS */}
-      <div className="p-5">
-        <h2 className="font-bold uppercase">Serviços</h2>
-        <div className="grid grid-cols-2 gap-4 p-5">
+      <div className="space-y-3 border-b border-solid p-5">
+        <h2 className="text-xs font-bold uppercase text-gray-400">Serviços</h2>
+        <div className="space-y-3">
           {barbershop.services.map((service) => (
-            <div key={service.id} className="rounded-md bg-white p-4 shadow-md">
-              <h3 className="text-lg font-bold">{service.name}</h3>
-              <p className="text-gray-400">{service.description}</p>
-            </div>
+            <ServiceItem key={service.id} service={service} />
           ))}
         </div>
+      </div>
+
+      {/* CONTATOS */}
+      <div className="space-y-3 p-5">
+        {barbershop.phones.map((phone) => (
+          <PhoneItem key={phone} phone={phone} />
+        ))}
       </div>
     </div>
   )

@@ -6,7 +6,13 @@ const nextConfig = {
         hostname: "utfs.io",
       },
       {
-        hostname: "lasalle.edu.br",
+        hostname: "www.unilasalle.edu.br",
+      },
+      {
+        hostname: "cdn.dooca.store",
+      },
+      {
+        hostname: "images.tcdn.com.br",
       },
     ],
   },
