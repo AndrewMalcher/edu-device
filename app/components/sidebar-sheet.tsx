@@ -34,13 +34,8 @@ const SidebarSheet = () => {
                 Conecte-se usando sua conta Google.
               </DialogDescription>
             </DialogHeader>
-            <Button>
-              <Image
-                src="\public\Google.png"
-                alt="Google"
-                width={18}
-                height={18}
-              />
+            <Button variant="outline" className="gap-1 font-bold">
+              <Image src="/Google.png" alt="Google" width={18} height={18} />
               Google
             </Button>
           </DialogContent>
