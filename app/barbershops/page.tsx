@@ -1,5 +1,5 @@
 import { db } from "../_lib/prisma"
-import BarbershopItem from "../components/barbershop-item"
+import EducationalinstitutionItem from "../components/educationalinstitution-item"
 import Header from "../components/header"
 import Search from "../components/search"
 
@@ -31,9 +31,9 @@ const BarbershopsPage = async ({ searchParams }: BarbershopsPageProps) => {
         </h2>
         <div className="grid grid-cols-2 gap-4">
           {educationalinstitutions.map((educationalinstitutions) => (
-            <BarbershopItem
+            <EducationalinstitutionItem
               key={educationalinstitutions.id}
-              barbershop={educationalinstitutions}
+              educationalinstitution={educationalinstitutions}
             />
           ))}
         </div>
