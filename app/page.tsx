@@ -1,11 +1,10 @@
-import { SearchIcon } from "lucide-react"
 import Header from "./components/header"
 import { Button } from "./components/ui/button"
-import { Input } from "./components/ui/input"
 import Image from "next/image"
 import { db } from "./_lib/prisma"
 import BarbershopItem from "./components/barbershop-item"
 import BookingItem from "./components/booking-item"
+import Search from "./components/search"
 
 const Home = async () => {
   // chamar meu banco de dados
@@ -23,11 +22,8 @@ const Home = async () => {
         <p>Segunda-fera, 05 de agosto.</p>
 
         {/* BUSCA */}
-        <div className="mt-6 flex items-center gap-2">
-          <Input type="text" placeholder="Pesquisar..." />
-          <Button>
-            <SearchIcon />
-          </Button>
+        <div className="mt-6">
+          <Search />
         </div>
 
         {/* QUICKSEARCH */}
