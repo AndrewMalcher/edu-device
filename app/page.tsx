@@ -4,7 +4,7 @@ import { Button } from "./components/ui/button"
 import { Input } from "./components/ui/input"
 import Image from "next/image"
 import { db } from "./_lib/prisma"
-import BarbershopItem from "./components/barbershop-item"
+import BarbershopItem from "./components/educationalinstitution-item"
 import BookingItem from "./components/booking-item"
 
 const Home = async () => {
@@ -67,7 +67,10 @@ const Home = async () => {
           {barbershops
             .filter((barbershop) => barbershop.name === "Faculdade La Salle") // Filtra para mostrar apenas as barbearias com título "Faculdade La Salle"
             .map((barbershop) => (
-              <BarbershopItem key={barbershop.id} barbershop={barbershop} />
+              <BarbershopItem
+                key={barbershop.id}
+                educationalinstitution={barbershop}
+              />
             ))}
         </div>
 
@@ -79,7 +82,10 @@ const Home = async () => {
           {barbershops
             .filter((barbershop) => barbershop.name === "Faculdade La Salle") // Filtra para mostrar apenas as barbearias com título "Faculdade La Salle"
             .map((barbershop) => (
-              <BarbershopItem key={barbershop.id} barbershop={barbershop} />
+              <BarbershopItem
+                key={barbershop.id}
+                educationalinstitution={barbershop}
+              />
             ))}
         </div>
       </div>
