@@ -5,6 +5,8 @@ import { db } from "./_lib/prisma"
 import BarbershopItem from "./components/educationalinstitution-item"
 import BookingItem from "./components/booking-item"
 import Search from "./components/search"
+import { quickSearchOptions } from "./_constants/search"
+import Link from "next/link"
 
 const Home = async () => {
   // chamar meu banco de dados
@@ -27,19 +29,20 @@ const Home = async () => {
         </div>
 
         {/* QUICKSEARCH */}
-        <div className="mt-6 flex gap-3">
-          <Button className="gap-2" variant="secondary">
-            CHROMEBOOKS
-          </Button>
-          <Button className="gap-2" variant="secondary">
-            IPADS
-          </Button>
-          <Button className="gap-2" variant="secondary">
-            NOTEBOOKS
-          </Button>
-          <Button className="gap-2" variant="secondary">
-            PROJETOR
-          </Button>
+        {/* BUSCA RÁPIDA */}
+        <div className="mt-6 flex gap-3 overflow-x-scroll [&::-webkit-scrollbar]:hidden">
+          {quickSearchOptions.map((option) => (
+            <Button
+              className="gap-2"
+              variant="secondary"
+              key={option.title}
+              asChild
+            >
+              <Link href={`/barbershops?service=${option.title}`}>
+                {option.title}
+              </Link>
+            </Button>
+          ))}
         </div>
 
         {/* IMAGEM */}
