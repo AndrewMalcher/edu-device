@@ -33,7 +33,7 @@ const educationalinstitutionItem = ({
             {educationalinstitution.address}
           </p>
           <Button variant="secondary" className="mt-3 w-full" asChild>
-            <Link href={`/barbershops/${educationalinstitution.id}`}>
+            <Link href={`/institutions/${educationalinstitution.id}`}>
               Reservar
             </Link>
           </Button>
