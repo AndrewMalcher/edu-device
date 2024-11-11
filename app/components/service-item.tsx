@@ -16,16 +16,22 @@ import {
 } from "./ui/sheet"
 import { Calendar } from "@/app/components/ui/calendar"
 import { useState } from "react"
-import { format } from "date-fns"
+import { format, set } from "date-fns"
+import { useSession } from "next-auth/react"
+import { createBooking } from "../_actions/create-booking"
+import { toast } from "sonner"
+import { Input } from "./ui/input"
 
 interface ServiceItemProps {
   service: Service
   educationalInstitution: Pick<EducationalInstitution, "name">
 }
 
-const TIME_LIST = ["18h45", "20h45"]
+const TIME_LIST = ["18:45", "20:45"]
 
 const ServiceItem = ({ service, educationalInstitution }: ServiceItemProps) => {
+  const { data } = useSession()
+  const [classroom, setClassroom] = useState<string>("") // Novo estado para sala de aula
   const [selectedDay, setSelectedDay] = useState<Date | undefined>(undefined)
   const [selectedTime, setSelectedTime] = useState<string | undefined>(
     undefined,
@@ -37,6 +43,30 @@ const ServiceItem = ({ service, educationalInstitution }: ServiceItemProps) => {
 
   const handleTimeSelect = (time: string) => {
     setSelectedTime(time)
+  }
+
+  const handleCreateBooking = async () => {
+    //1. não exibir horários que já foram agendados
+    try {
+      if (!selectedDay || !selectedTime || !classroom) return
+      //["09:00 || "00]
+      const hour = Number(selectedTime.split(":")[0])
+      const minute = Number(selectedTime.split(":")[1])
+      const newDate = set(selectedDay, {
+        minutes: minute,
+        hours: hour,
+      })
+      await createBooking({
+        serviceId: service.id,
+        userId: (data?.user as any).id,
+        date: newDate,
+        description: classroom,
+      })
+      toast.success("Reserva criada com sucesso")
+    } catch (error) {
+      console.error(error)
+      toast.error("Erro ao criar reserva")
+    }
   }
 
   return (
@@ -109,7 +139,7 @@ const ServiceItem = ({ service, educationalInstitution }: ServiceItemProps) => {
                 {selectedTime && selectedDay && (
                   <div className="p-5">
                     <Card>
-                      <CardContent className="p-3">
+                      <CardContent className="space-y-3 p-3">
                         <div className="flex items-center justify-between">
                           <h2 className="font-bold">{service.name}</h2>
                         </div>
@@ -135,13 +165,31 @@ const ServiceItem = ({ service, educationalInstitution }: ServiceItemProps) => {
                             {educationalInstitution.name}
                           </p>
                         </div>
+                        <div className="mt-3 flex items-center justify-between">
+                          <h2 className="text-sm text-gray-400">
+                            Sala de aula:
+                          </h2>
+                          <Input
+                            required
+                            type="text"
+                            placeholder="Digite a sala de aula"
+                            className="w-40 rounded bg-gray-800 px-2 py-1 text-center text-sm text-gray-300 focus:outline-none focus:ring focus:ring-blue-500"
+                            value={classroom}
+                            onChange={(e) => setClassroom(e.target.value)}
+                          />
+                        </div>
                       </CardContent>
                     </Card>
                   </div>
                 )}
-                <SheetFooter className="px-5">
+                <SheetFooter className="mt-5 px-5">
                   <SheetClose asChild>
-                    <Button type="submit">Reservar</Button>
+                    <Button
+                      onClick={handleCreateBooking}
+                      disabled={!selectedDay || !selectedTime || !classroom}
+                    >
+                      Reservar
+                    </Button>
                   </SheetClose>
                 </SheetFooter>
               </SheetContent>
