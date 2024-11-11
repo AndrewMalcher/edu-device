@@ -20,6 +20,8 @@ import { createBooking } from "../_actions/create-booking"
 import { toast } from "sonner"
 import { Input } from "./ui/input"
 import { getBookings } from "../_actions/get-bookings"
+import { Dialog, DialogContent } from "./ui/dialog"
+import SignInDialog from "./sign-in-dialog"
 
 interface ServiceItemProps {
   service: Service
@@ -45,6 +47,7 @@ const getTimeList = (bookings: Booking[]) => {
 }
 
 const ServiceItem = ({ service, educationalInstitution }: ServiceItemProps) => {
+  const [signInDialogIsOpen, setSignInDialogIsOpen] = useState(false)
   const { data } = useSession()
   const [classroom, setClassroom] = useState<string>("") // Novo estado para sala de aula
   const [selectedDay, setSelectedDay] = useState<Date | undefined>(undefined)
@@ -65,6 +68,13 @@ const ServiceItem = ({ service, educationalInstitution }: ServiceItemProps) => {
     }
     fetch()
   }, [selectedDay, service.id])
+
+  const handleBookingClick = () => {
+    if (data?.user) {
+      return setBookingSheetIsOpen(true)
+    }
+    return setSignInDialogIsOpen(true)
+  }
 
   const handleBookingSheetOpenChange = () => {
     setSelectedDay(undefined)
@@ -107,143 +117,166 @@ const ServiceItem = ({ service, educationalInstitution }: ServiceItemProps) => {
     }
   }
 
+  const availableTimes = getTimeList(dayBookings)
+
   return (
-    <Card>
-      <CardContent className="flex items-center gap-3 p-3">
-        {/* IMAGE */}
-        <div className="relative max-h-[110px] min-h-[110px] min-w-[110px] max-w-[110px]">
-          <Image
-            alt={service.name}
-            src={service.imageUrl}
-            fill
-            className="rounded-lg object-cover"
-          />
-        </div>
-
-        {/* DIREITA */}
-        <div className="space-y-2">
-          <h3 className="text-sm font-semibold">{service.name}</h3>
-          <p className="text-sm text-gray-400">{service.description} </p>
-          <div className="flex items-center justify-between">
-            <Sheet
-              open={bookingSheetIsOpen}
-              onOpenChange={handleBookingSheetOpenChange}
-            >
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={() => setBookingSheetIsOpen(true)}
-              >
-                Reservar
-              </Button>
-
-              <SheetContent className="px-0">
-                <SheetHeader>
-                  <SheetTitle>Fazer Reserva</SheetTitle>
-                </SheetHeader>
-                <div className="border-b border-solid py-5">
-                  <Calendar
-                    mode="single"
-                    locale={ptBR}
-                    selected={selectedDay}
-                    onSelect={handleDateSelect}
-                    fromDate={addDays(new Date(), 2)}
-                    styles={{
-                      head_cell: {
-                        width: "100%",
-                        textTransform: "capitalize",
-                      },
-                      cell: {
-                        width: "100%",
-                      },
-                      button: {
-                        width: "100%",
-                      },
-                      nav_button_previous: {
-                        width: "32px",
-                        height: "32px",
-                      },
-                      nav_button_next: {
-                        width: "32px",
-                        height: "32px",
-                      },
-                    }}
-                  />
-                </div>
-                {selectedDay && (
-                  <div className="flex gap-3 overflow-x-auto border-b border-solid p-5 px-5 [&::-webkit-scrollbar]:hidden">
-                    {getTimeList(dayBookings).map((time) => (
-                      <Button
-                        key={time}
-                        variant={selectedTime === time ? "default" : "outline"}
-                        className="rounded-full"
-                        onClick={() => handleTimeSelect(time)}
-                      >
-                        {time}
-                      </Button>
-                    ))}
-                  </div>
-                )}
-                {selectedTime && selectedDay && (
-                  <div className="p-5">
-                    <Card>
-                      <CardContent className="space-y-3 p-3">
-                        <div className="flex items-center justify-between">
-                          <h2 className="font-bold">{service.name}</h2>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <h2 className="text-sm text-gray-400">Data:</h2>
-                          <p className="text-sm text-gray-300">
-                            {format(selectedDay, "d 'de' MMMM 'de' yyyy", {
-                              locale: ptBR,
-                            })}
-                          </p>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <h2 className="text-sm text-gray-400">Horário:</h2>
-                          <p className="text-sm text-gray-300">
-                            {selectedTime}
-                          </p>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <h2 className="text-sm text-gray-400">
-                            Instituição:
-                          </h2>
-                          <p className="text-sm text-gray-300">
-                            {educationalInstitution.name}
-                          </p>
-                        </div>
-                        <div className="mt-3 flex items-center justify-between">
-                          <h2 className="text-sm text-gray-400">
-                            Sala de aula:
-                          </h2>
-                          <Input
-                            required
-                            type="text"
-                            placeholder="Digite a sala de aula"
-                            className="w-40 rounded bg-gray-800 px-2 py-1 text-center text-sm text-gray-300 focus:outline-none focus:ring focus:ring-blue-500"
-                            value={classroom}
-                            onChange={(e) => setClassroom(e.target.value)}
-                          />
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
-                )}
-                <SheetFooter className="mt-5 px-5">
-                  <Button
-                    onClick={handleCreateBooking}
-                    disabled={!selectedDay || !selectedTime || !classroom}
-                  >
-                    Reservar
-                  </Button>
-                </SheetFooter>
-              </SheetContent>
-            </Sheet>
+    <>
+      <Card>
+        <CardContent className="flex items-center gap-3 p-3">
+          {/* IMAGE */}
+          <div className="relative max-h-[110px] min-h-[110px] min-w-[110px] max-w-[110px]">
+            <Image
+              alt={service.name}
+              src={service.imageUrl}
+              fill
+              className="rounded-lg object-cover"
+            />
           </div>
-        </div>
-      </CardContent>
-    </Card>
+
+          {/* DIREITA */}
+          <div className="space-y-2">
+            <h3 className="text-sm font-semibold">{service.name}</h3>
+            <p className="text-sm text-gray-400">{service.description} </p>
+            <div className="flex items-center justify-between">
+              <Sheet
+                open={bookingSheetIsOpen}
+                onOpenChange={handleBookingSheetOpenChange}
+              >
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => handleBookingClick()}
+                >
+                  Reservar
+                </Button>
+
+                <SheetContent className="px-0">
+                  <SheetHeader>
+                    <SheetTitle>Fazer Reserva</SheetTitle>
+                  </SheetHeader>
+                  <div className="border-b border-solid py-5">
+                    <Calendar
+                      mode="single"
+                      locale={ptBR}
+                      selected={selectedDay}
+                      onSelect={handleDateSelect}
+                      fromDate={addDays(new Date(), 2)}
+                      styles={{
+                        head_cell: {
+                          width: "100%",
+                          textTransform: "capitalize",
+                        },
+                        cell: {
+                          width: "100%",
+                        },
+                        button: {
+                          width: "100%",
+                        },
+                        nav_button_previous: {
+                          width: "32px",
+                          height: "32px",
+                        },
+                        nav_button_next: {
+                          width: "32px",
+                          height: "32px",
+                        },
+                      }}
+                    />
+                  </div>
+                  {selectedDay && (
+                    <div>
+                      {availableTimes.length > 0 ? (
+                        <div className="flex gap-3 overflow-x-auto border-b border-solid p-5 [&::-webkit-scrollbar]:hidden">
+                          {availableTimes.map((time) => (
+                            <Button
+                              key={time}
+                              variant={
+                                selectedTime === time ? "default" : "outline"
+                              }
+                              className="rounded-full"
+                              onClick={() => handleTimeSelect(time)}
+                            >
+                              {time}
+                            </Button>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="p-5 text-center text-sm text-red-500">
+                          Não há mais horários disponíveis para este dia!
+                        </p>
+                      )}
+                    </div>
+                  )}
+                  {selectedTime && selectedDay && (
+                    <div className="p-5">
+                      <Card>
+                        <CardContent className="space-y-3 p-3">
+                          <div className="flex items-center justify-between">
+                            <h2 className="font-bold">{service.name}</h2>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <h2 className="text-sm text-gray-400">Data:</h2>
+                            <p className="text-sm text-gray-300">
+                              {format(selectedDay, "d 'de' MMMM 'de' yyyy", {
+                                locale: ptBR,
+                              })}
+                            </p>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <h2 className="text-sm text-gray-400">Horário:</h2>
+                            <p className="text-sm text-gray-300">
+                              {selectedTime}
+                            </p>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <h2 className="text-sm text-gray-400">
+                              Instituição:
+                            </h2>
+                            <p className="text-sm text-gray-300">
+                              {educationalInstitution.name}
+                            </p>
+                          </div>
+                          <div className="mt-3 flex items-center justify-between">
+                            <h2 className="text-sm text-gray-400">
+                              Sala de aula:
+                            </h2>
+                            <Input
+                              required
+                              type="text"
+                              placeholder="Digite a sala de aula"
+                              className="w-40 rounded bg-gray-800 px-2 py-1 text-center text-sm text-gray-300 focus:outline-none focus:ring focus:ring-blue-500"
+                              value={classroom}
+                              onChange={(e) => setClassroom(e.target.value)}
+                            />
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </div>
+                  )}
+                  <SheetFooter className="mt-5 px-5">
+                    <Button
+                      onClick={handleCreateBooking}
+                      disabled={!selectedDay || !selectedTime || !classroom}
+                    >
+                      Reservar
+                    </Button>
+                  </SheetFooter>
+                </SheetContent>
+              </Sheet>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Dialog
+        open={signInDialogIsOpen}
+        onOpenChange={(open) => setSignInDialogIsOpen(open)}
+      >
+        <DialogContent className="w-[90%]">
+          <SignInDialog />
+        </DialogContent>
+      </Dialog>
+    </>
   )
 }
 export default ServiceItem
