@@ -12,6 +12,7 @@ import {
   SheetTrigger,
 } from "./ui/sheet"
 import Image from "next/image"
+import PhoneItem from "./phone-item"
 
 interface BookingItemProps {
   booking: Prisma.BookingGetPayload<{
@@ -83,7 +84,7 @@ const BookingItem = ({ booking }: BookingItemProps) => {
             className="rounded-xl object-cover"
           />
 
-          <Card className="z-50 mx-5 mb-3 w-full">
+          <Card className="z-50 mx-5 mb-3 w-full rounded-xl">
             <CardContent className="flex items-center gap-3 px-5 py-3">
               <Avatar>
                 <AvatarImage src={EducationalInstitution.imageUrl} />
@@ -103,6 +104,44 @@ const BookingItem = ({ booking }: BookingItemProps) => {
           >
             {isConfirmed ? "Confirmado" : "Finalizado"}
           </Badge>
+          <Card className="mb-3 mt-6">
+            <CardContent className="space-y-3 p-3">
+              <div className="flex items-center justify-between">
+                <h2 className="font-bold">{booking.service.name}</h2>
+              </div>
+              <div className="flex items-center justify-between">
+                <h2 className="text-sm text-gray-400">Data:</h2>
+                <p className="text-sm text-gray-300">
+                  {format(booking.date, "d 'de' MMMM 'de' yyyy", {
+                    locale: ptBR,
+                  })}
+                </p>
+              </div>
+              <div className="flex items-center justify-between">
+                <h2 className="text-sm text-gray-400">Horário:</h2>
+                <p className="text-sm text-gray-300">
+                  {format(booking.date, "HH:mm", {
+                    locale: ptBR,
+                  })}
+                </p>
+              </div>
+              <div className="flex items-center justify-between">
+                <h2 className="text-sm text-gray-400">Instituição:</h2>
+                <p className="text-sm text-gray-300">
+                  {booking.service.EducationalInstitution.name}
+                </p>
+              </div>
+              <div className="mt-3 flex items-center justify-between">
+                <h2 className="text-sm text-gray-400">Sala de aula:</h2>
+                <p>{booking.description}</p>
+              </div>
+            </CardContent>
+          </Card>
+          <div className="space-y-3">
+            {EducationalInstitution.phones.map((phone, index) => (
+              <PhoneItem key={index} phone={phone} />
+            ))}
+          </div>
         </div>
       </SheetContent>
     </Sheet>
