@@ -3,6 +3,7 @@
 import { EducationalInstitution, Service, Booking } from "@prisma/client"
 import Image from "next/image"
 import { Button } from "./ui/button"
+import { useRouter } from "next/navigation"
 import { ptBR } from "date-fns/locale"
 import { Card, CardContent } from "./ui/card"
 import {
@@ -49,6 +50,7 @@ const getTimeList = (bookings: Booking[]) => {
 const ServiceItem = ({ service, educationalInstitution }: ServiceItemProps) => {
   const [signInDialogIsOpen, setSignInDialogIsOpen] = useState(false)
   const { data } = useSession()
+  const router = useRouter()
   const [classroom, setClassroom] = useState<string>("") // Novo estado para sala de aula
   const [selectedDay, setSelectedDay] = useState<Date | undefined>(undefined)
   const [selectedTime, setSelectedTime] = useState<string | undefined>(
@@ -110,7 +112,12 @@ const ServiceItem = ({ service, educationalInstitution }: ServiceItemProps) => {
         description: classroom,
       })
       handleBookingSheetOpenChange()
-      toast.success("Reserva criada com sucesso")
+      toast.success("Reserva criada com sucesso", {
+        action: {
+          label: "Ver agendamentos",
+          onClick: () => router.push("/bookings"),
+        },
+      })
     } catch (error) {
       console.error(error)
       toast.error("Erro ao criar reserva")
