@@ -14,8 +14,8 @@ import {
   SheetTitle,
 } from "./ui/sheet"
 import { Calendar } from "@/app/components/ui/calendar"
-import { useEffect, useState } from "react"
-import { addDays, format, set } from "date-fns"
+import { useEffect, useMemo, useState } from "react"
+import { addDays, format, isPast, isToday, set } from "date-fns"
 import { useSession } from "next-auth/react"
 import { createBooking } from "../_actions/create-booking"
 import { toast } from "sonner"
@@ -31,10 +31,21 @@ interface ServiceItemProps {
 
 const TIME_LIST = ["18:45", "20:45"]
 
-const getTimeList = (bookings: Booking[]) => {
+interface GetTimeListProps {
+  bookings: Booking[]
+  selectedDay: Date
+}
+
+const getTimeList = ({ bookings, selectedDay }: GetTimeListProps) => {
   return TIME_LIST.filter((time) => {
     const hour = Number(time.split(":")[0])
     const minutes = Number(time.split(":")[1])
+
+    const timeIsOnThePast = isPast(set(new Date(), { hours: hour, minutes }))
+    if (timeIsOnThePast && isToday(selectedDay)) {
+      return false
+    }
+
     const hasBookingOnCurrentTime = bookings.some(
       (booking) =>
         booking.date.getHours() === hour &&
@@ -124,7 +135,13 @@ const ServiceItem = ({ service, educationalInstitution }: ServiceItemProps) => {
     }
   }
 
-  const availableTimes = getTimeList(dayBookings)
+  const timeList = useMemo(() => {
+    if (!selectedDay) return []
+    return getTimeList({
+      bookings: dayBookings,
+      selectedDay,
+    })
+  }, [dayBookings, selectedDay])
 
   return (
     <>
@@ -192,9 +209,9 @@ const ServiceItem = ({ service, educationalInstitution }: ServiceItemProps) => {
                   </div>
                   {selectedDay && (
                     <div>
-                      {availableTimes.length > 0 ? (
+                      {timeList.length > 0 ? (
                         <div className="flex gap-3 overflow-x-auto border-b border-solid p-5 [&::-webkit-scrollbar]:hidden">
-                          {availableTimes.map((time) => (
+                          {timeList.map((time) => (
                             <Button
                               key={time}
                               variant={
@@ -214,7 +231,7 @@ const ServiceItem = ({ service, educationalInstitution }: ServiceItemProps) => {
                       )}
                     </div>
                   )}
-                  {selectedTime && selectedDay && availableTimes.length > 0 && (
+                  {selectedTime && selectedDay && timeList.length > 0 && (
                     <div className="p-5">
                       <Card>
                         <CardContent className="space-y-3 p-3">
