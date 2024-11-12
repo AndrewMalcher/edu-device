@@ -7,11 +7,35 @@ import BookingItem from "./components/booking-item"
 import Search from "./components/search"
 import { quickSearchOptions } from "./_constants/search"
 import Link from "next/link"
+import { getServerSession } from "next-auth"
+import { authOptions } from "./_lib/auth"
+import { ptBR } from "date-fns/locale"
+import { format } from "date-fns"
 
 const Home = async () => {
+  const session = await getServerSession(authOptions)
   // Buscar instituições educacionais no banco de dados
   const educationalInstitutions = await db.educationalInstitution.findMany({})
-  console.log({ educationalInstitutions })
+  const confirmedBookings = session?.user
+    ? await db.booking.findMany({
+        where: {
+          userId: (session?.user as any).id,
+          date: {
+            gte: new Date(),
+          },
+        },
+        include: {
+          service: {
+            include: {
+              EducationalInstitution: true,
+            },
+          },
+        },
+        orderBy: {
+          date: "asc",
+        },
+      })
+    : []
 
   return (
     <div>
@@ -19,9 +43,21 @@ const Home = async () => {
       <Header />
       {/* HEADER */}
 
+      {/* TEXTO */}
       <div className="p-5">
-        <h2 className="text-xl font-bold">Olá, Andrew!</h2>
-        <p>Segunda-feira, 05 de agosto.</p>
+        <h2 className="text-xl font-bold">
+          Olá, {session?.user ? session.user.name : "bem vindo"}!
+        </h2>
+        <p>
+          <span className="capitalize">
+            {format(new Date(), "EEEE, dd", { locale: ptBR })}
+          </span>
+          <span>&nbsp;de&nbsp;</span>
+          <span className="capitalize">
+            {format(new Date(), "MMMM", { locale: ptBR })}
+          </span>
+        </p>
+
         {/* BUSCA */}
         <div className="mt-6">
           <Search />
@@ -50,8 +86,17 @@ const Home = async () => {
             src="/Banner01.png"
           />
         </div>
+
         {/* AGENDAMENTO */}
-        <BookingItem />
+        <h2 className="mb-3 mt-6 font-bold uppercase text-gray-400">
+          AGENDAMENTOS
+        </h2>
+        <div className="flex gap-3 overflow-x-auto [&::-webkit-scrollbar]:hidden">
+          {confirmedBookings.map((booking) => (
+            <BookingItem key={booking.id} booking={booking} />
+          ))}
+        </div>
+
         {/* POPULARES */}
         <h2 className="mb-3 mt-6 font-bold uppercase text-gray-400">MANAUS</h2>
         <div className="flex gap-4 overflow-auto [&::-webkit-scrollbar]:hidden">
