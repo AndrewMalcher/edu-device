@@ -1,17 +1,19 @@
-import BarbershopItem from "../components/educationalinstitution-item"
+import EducationalInstitutionItem from "../components/educationalinstitution-item"
 import Header from "../components/header"
 import Search from "../components/search"
 import { db } from "../_lib/prisma"
 
-interface BarbershopsPageProps {
+interface EducationalInstitutionsPageProps {
   searchParams: {
     title?: string
     service?: string
   }
 }
 
-const BarbershopsPage = async ({ searchParams }: BarbershopsPageProps) => {
-  const barbershops = await db.educationalInstitution.findMany({
+const EducationalInstitutionsPage = async ({
+  searchParams,
+}: EducationalInstitutionsPageProps) => {
+  const institutions = await db.educationalInstitution.findMany({
     where: {
       OR: [
         searchParams?.title
@@ -50,10 +52,10 @@ const BarbershopsPage = async ({ searchParams }: BarbershopsPageProps) => {
           &quot;
         </h2>
         <div className="grid grid-cols-2 gap-4">
-          {barbershops.map((barbershop) => (
-            <BarbershopItem
-              key={barbershop.id}
-              educationalinstitution={barbershop}
+          {institutions.map((institution) => (
+            <EducationalInstitutionItem
+              key={institution.id}
+              educationalinstitution={institution}
             />
           ))}
         </div>
@@ -62,4 +64,4 @@ const BarbershopsPage = async ({ searchParams }: BarbershopsPageProps) => {
   )
 }
 
-export default BarbershopsPage
+export default EducationalInstitutionsPage

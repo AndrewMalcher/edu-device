@@ -8,14 +8,16 @@ import PhoneItem from "@/app/components/phone-item"
 import SidebarSheet from "@/app/components/sidebar-sheet"
 import { Sheet, SheetTrigger } from "@/app/components/ui/sheet"
 
-interface BarbershopPageProps {
+interface EducationalInstitutionPageProps {
   params: {
     id: string
   }
 }
 
-const BarbeshopPage = async ({ params }: BarbershopPageProps) => {
-  const barbershop = await db.educationalInstitution.findUnique({
+const EducationalInstitutionPage = async ({
+  params,
+}: EducationalInstitutionPageProps) => {
+  const institution = await db.educationalInstitution.findUnique({
     where: {
       id: params.id,
     },
@@ -24,7 +26,7 @@ const BarbeshopPage = async ({ params }: BarbershopPageProps) => {
     },
   })
 
-  if (!barbershop) {
+  if (!institution) {
     return <div>Educational Institution not found</div>
   }
 
@@ -33,8 +35,8 @@ const BarbeshopPage = async ({ params }: BarbershopPageProps) => {
       {/* IMAGEM */}
       <div className="relative h-[250px] w-full">
         <Image
-          alt={barbershop.name}
-          src={barbershop.imageUrl}
+          alt={institution.name}
+          src={institution.imageUrl}
           fill
           className="object-cover"
         />
@@ -63,29 +65,29 @@ const BarbeshopPage = async ({ params }: BarbershopPageProps) => {
         </Sheet>
       </div>
 
-      {/* TITULO DA BARBEARIA */}
+      {/* TÍTULO DA INSTITUIÇÃO */}
       <div className="border-b border-solid p-5">
-        <h1 className="mb-3 text-xl font-bold">{barbershop.name} </h1>
+        <h1 className="mb-3 text-xl font-bold">{institution.name}</h1>
         <div className="flex items-center gap-1">
           <MapPinIcon className="text-primary" size={18} />
-          <p className="text-sm text-gray-400">{barbershop.address}</p>
+          <p className="text-sm text-gray-400">{institution.address}</p>
         </div>
       </div>
 
       {/* DESCRIÇÃO */}
       <div className="space-y-2 border-b border-solid p-5">
         <h2 className="text-xs font-bold uppercase text-gray-400">Sobre nós</h2>
-        <p className="text-justify">{barbershop.description}</p>
+        <p className="text-justify">{institution.description}</p>
       </div>
 
       {/* SERVIÇOS */}
       <div className="space-y-3 border-b border-solid p-5">
         <h2 className="text-xs font-bold uppercase text-gray-400">Serviços</h2>
         <div className="space-y-3">
-          {barbershop.services.map((service) => (
+          {institution.services.map((service) => (
             <ServiceItem
               key={service.id}
-              educationalInstitution={barbershop}
+              educationalInstitution={institution}
               service={service}
             />
           ))}
@@ -94,7 +96,7 @@ const BarbeshopPage = async ({ params }: BarbershopPageProps) => {
 
       {/* CONTATOS */}
       <div className="space-y-3 p-5">
-        {barbershop.phones.map((phone) => (
+        {institution.phones.map((phone) => (
           <PhoneItem key={phone} phone={phone} />
         ))}
       </div>
@@ -102,4 +104,4 @@ const BarbeshopPage = async ({ params }: BarbershopPageProps) => {
   )
 }
 
-export default BarbeshopPage
+export default EducationalInstitutionPage
