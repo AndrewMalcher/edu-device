@@ -150,7 +150,7 @@ const ServiceItem = ({ service, educationalInstitution }: ServiceItemProps) => {
                   Reservar
                 </Button>
 
-                <SheetContent className="px-0">
+                <SheetContent className="overflow-y-scroll px-0 [&::-webkit-scrollbar]:hidden">
                   <SheetHeader>
                     <SheetTitle>Fazer Reserva</SheetTitle>
                   </SheetHeader>
