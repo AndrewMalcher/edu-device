@@ -37,14 +37,11 @@ interface BookingItemProps {
   }>
 }
 
-//to do : receber agendamento como prop
-
 const BookingItem = ({ booking }: BookingItemProps) => {
   const [isSheetOpen, setIsSheetOpen] = useState(false)
-  const {
-    service: { EducationalInstitution },
-  } = booking
+  const { EducationalInstitution } = booking.service
   const isConfirmed = isFuture(booking.date)
+
   const handleCancelBooking = async () => {
     try {
       await deleteBooking(booking.id)
@@ -54,6 +51,7 @@ const BookingItem = ({ booking }: BookingItemProps) => {
       toast.error("Não foi possível cancelar o agendamento. Tente novamente.")
     }
   }
+
   const handleSheetOpenChange = (isOpen: boolean) => {
     setIsSheetOpen(isOpen)
   }
@@ -63,7 +61,7 @@ const BookingItem = ({ booking }: BookingItemProps) => {
       <SheetTrigger className="w-full min-w-[90%]">
         <Card className="min-w-[90%]">
           <CardContent className="flex justify-between p-0">
-            {/* ESQUERDA   */}
+            {/* ESQUERDA */}
             <div className="flex flex-col gap-2 py-5 pl-5">
               <Badge
                 className="w-fit"
@@ -72,15 +70,12 @@ const BookingItem = ({ booking }: BookingItemProps) => {
                 {isConfirmed ? "Confirmado" : "Finalizado"}
               </Badge>
               <h3 className="font-semibold">{booking.service.name}</h3>
-
               <div className="flex items-center gap-2">
                 <Avatar className="h-6 w-6">
-                  <AvatarImage
-                    src={booking.service.EducationalInstitution.imageUrl}
-                  />
+                  <AvatarImage src={EducationalInstitution.imageUrl} />
                 </Avatar>
                 <p className="border-r-2 border-solid px-1 text-sm">
-                  {booking.service.EducationalInstitution.name}
+                  {EducationalInstitution.name}
                 </p>
                 <p className="px-2">{booking.description}</p>
               </div>
@@ -88,13 +83,13 @@ const BookingItem = ({ booking }: BookingItemProps) => {
             {/* DIREITA */}
             <div className="flex flex-col items-center justify-center border-l-2 border-solid px-5">
               <p className="text-sm capitalize">
-                {format(booking.date, "MMMM", { locale: ptBR })}{" "}
+                {format(booking.date, "MMMM", { locale: ptBR })}
               </p>
               <p className="text-2xl capitalize">
-                {format(booking.date, "dd", { locale: ptBR })}{" "}
+                {format(booking.date, "dd", { locale: ptBR })}
               </p>
               <p className="text-sm capitalize">
-                {format(booking.date, "HH:mm", { locale: ptBR })}{" "}
+                {format(booking.date, "HH:mm", { locale: ptBR })}
               </p>
             </div>
           </CardContent>
@@ -110,11 +105,10 @@ const BookingItem = ({ booking }: BookingItemProps) => {
         <div className="relative mt-6 flex h-[180px] w-full items-end">
           <Image
             src="/maps.png"
-            alt={`Mapa da instituição ${booking.service.EducationalInstitution.name}`}
+            alt={`Mapa da instituição ${EducationalInstitution.name}`}
             fill
             className="rounded-xl object-cover"
           />
-
           <Card className="z-50 mx-5 mb-3 w-full rounded-xl">
             <CardContent className="flex items-center gap-3 px-5 py-3">
               <Avatar>
@@ -151,15 +145,13 @@ const BookingItem = ({ booking }: BookingItemProps) => {
               <div className="flex items-center justify-between">
                 <h2 className="text-sm text-gray-400">Horário:</h2>
                 <p className="text-sm text-gray-300">
-                  {format(booking.date, "HH:mm", {
-                    locale: ptBR,
-                  })}
+                  {format(booking.date, "HH:mm", { locale: ptBR })}
                 </p>
               </div>
               <div className="flex items-center justify-between">
                 <h2 className="text-sm text-gray-400">Instituição:</h2>
                 <p className="text-sm text-gray-300">
-                  {booking.service.EducationalInstitution.name}
+                  {EducationalInstitution.name}
                 </p>
               </div>
               <div className="mt-3 flex items-center justify-between">
@@ -183,7 +175,7 @@ const BookingItem = ({ booking }: BookingItemProps) => {
             </SheetClose>
             {isConfirmed && (
               <Dialog>
-                <DialogTrigger asChild className="w-full">
+                <DialogTrigger asChild>
                   <Button variant="destructive" className="w-full">
                     Cancelar Agendamento
                   </Button>
@@ -202,15 +194,13 @@ const BookingItem = ({ booking }: BookingItemProps) => {
                         Voltar
                       </Button>
                     </DialogClose>
-                    <DialogClose>
-                      <Button
-                        className="w-full"
-                        variant="destructive"
-                        onClick={handleCancelBooking}
-                      >
-                        Confirmar
-                      </Button>
-                    </DialogClose>
+                    <Button
+                      className="w-full"
+                      variant="destructive"
+                      onClick={handleCancelBooking}
+                    >
+                      Confirmar
+                    </Button>
                   </DialogFooter>
                 </DialogContent>
               </Dialog>

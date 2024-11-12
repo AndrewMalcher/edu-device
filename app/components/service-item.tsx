@@ -38,23 +38,20 @@ interface GetTimeListProps {
 
 const getTimeList = ({ bookings, selectedDay }: GetTimeListProps) => {
   return TIME_LIST.filter((time) => {
-    const hour = Number(time.split(":")[0])
-    const minutes = Number(time.split(":")[1])
+    const [hour, minutes] = time.split(":").map(Number)
 
-    const timeIsOnThePast = isPast(set(new Date(), { hours: hour, minutes }))
-    if (timeIsOnThePast && isToday(selectedDay)) {
+    if (
+      isToday(selectedDay) &&
+      isPast(set(new Date(), { hours: hour, minutes }))
+    ) {
       return false
     }
 
-    const hasBookingOnCurrentTime = bookings.some(
+    return !bookings.some(
       (booking) =>
         booking.date.getHours() === hour &&
         booking.date.getMinutes() === minutes,
     )
-    if (hasBookingOnCurrentTime) {
-      return false
-    }
-    return true
   })
 }
 
@@ -62,7 +59,7 @@ const ServiceItem = ({ service, educationalInstitution }: ServiceItemProps) => {
   const [signInDialogIsOpen, setSignInDialogIsOpen] = useState(false)
   const { data } = useSession()
   const router = useRouter()
-  const [classroom, setClassroom] = useState<string>("") // Novo estado para sala de aula
+  const [classroom, setClassroom] = useState<string>("")
   const [selectedDay, setSelectedDay] = useState<Date | undefined>(undefined)
   const [selectedTime, setSelectedTime] = useState<string | undefined>(
     undefined,
@@ -71,58 +68,59 @@ const ServiceItem = ({ service, educationalInstitution }: ServiceItemProps) => {
   const [bookingSheetIsOpen, setBookingSheetIsOpen] = useState(false)
 
   useEffect(() => {
-    const fetch = async () => {
-      if (!selectedDay) return
-      const bookings = await getBookings({
-        date: selectedDay,
-        serviceId: service.id,
-      })
-      setDayBookings(bookings)
-      setSelectedTime(undefined)
+    if (!selectedDay) return
+
+    const fetchBookings = async () => {
+      try {
+        const bookings = await getBookings({
+          date: selectedDay,
+          serviceId: service.id,
+        })
+        setDayBookings(bookings)
+        setSelectedTime(undefined)
+      } catch (error) {
+        console.error("Erro ao buscar reservas: ", error)
+      }
     }
-    fetch()
+
+    fetchBookings()
   }, [selectedDay, service.id])
 
   const handleBookingClick = () => {
     if (data?.user) {
-      return setBookingSheetIsOpen(true)
+      setBookingSheetIsOpen(true)
+    } else {
+      setSignInDialogIsOpen(true)
     }
-    return setSignInDialogIsOpen(true)
   }
 
   const handleBookingSheetOpenChange = () => {
+    setBookingSheetIsOpen(false)
+    resetBookingForm()
+  }
+
+  const resetBookingForm = () => {
     setSelectedDay(undefined)
     setSelectedTime(undefined)
     setDayBookings([])
-    setBookingSheetIsOpen(false)
     setClassroom("")
   }
 
-  const handleDateSelect = (date: Date | undefined) => {
-    setSelectedDay(date)
-  }
-
-  const handleTimeSelect = (time: string) => {
-    setSelectedTime(time)
-  }
-
   const handleCreateBooking = async () => {
-    //1. não exibir horários que já foram agendados
     try {
       if (!selectedDay || !selectedTime || !classroom) return
-      //["09:00 || "00]
-      const hour = Number(selectedTime.split(":")[0])
-      const minute = Number(selectedTime.split(":")[1])
-      const newDate = set(selectedDay, {
-        minutes: minute,
-        hours: hour,
-      })
+
+      const [hour, minute] = selectedTime.split(":").map(Number)
+      const newDate = set(selectedDay, { hours: hour, minutes: minute })
+
       await createBooking({
         serviceId: service.id,
         date: newDate,
         description: classroom,
       })
+
       handleBookingSheetOpenChange()
+
       toast.success("Reserva criada com sucesso", {
         action: {
           label: "Ver agendamentos",
@@ -130,7 +128,7 @@ const ServiceItem = ({ service, educationalInstitution }: ServiceItemProps) => {
         },
       })
     } catch (error) {
-      console.error(error)
+      console.error("Erro ao criar reserva: ", error)
       toast.error("Erro ao criar reserva")
     }
   }
@@ -147,7 +145,6 @@ const ServiceItem = ({ service, educationalInstitution }: ServiceItemProps) => {
     <>
       <Card>
         <CardContent className="flex items-center gap-3 p-3">
-          {/* IMAGE */}
           <div className="relative max-h-[110px] min-h-[110px] min-w-[110px] max-w-[110px]">
             <Image
               alt={service.name}
@@ -157,145 +154,119 @@ const ServiceItem = ({ service, educationalInstitution }: ServiceItemProps) => {
             />
           </div>
 
-          {/* DIREITA */}
           <div className="space-y-2">
             <h3 className="text-sm font-semibold">{service.name}</h3>
-            <p className="text-sm text-gray-400">{service.description} </p>
-            <div className="flex items-center justify-between">
-              <Sheet
-                open={bookingSheetIsOpen}
-                onOpenChange={handleBookingSheetOpenChange}
+            <p className="text-sm text-gray-400">{service.description}</p>
+            <Sheet
+              open={bookingSheetIsOpen}
+              onOpenChange={handleBookingSheetOpenChange}
+            >
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={handleBookingClick}
               >
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  onClick={() => handleBookingClick()}
-                >
-                  Reservar
-                </Button>
+                Reservar
+              </Button>
 
-                <SheetContent className="overflow-y-scroll px-0 [&::-webkit-scrollbar]:hidden">
-                  <SheetHeader>
-                    <SheetTitle>Fazer Reserva</SheetTitle>
-                  </SheetHeader>
-                  <div className="border-b border-solid py-5 capitalize">
-                    <Calendar
-                      mode="single"
-                      locale={ptBR}
-                      selected={selectedDay}
-                      onSelect={handleDateSelect}
-                      fromDate={addDays(new Date(), 2)}
-                      styles={{
-                        head_cell: {
-                          width: "100%",
-                          textTransform: "capitalize",
-                        },
-                        cell: {
-                          width: "100%",
-                        },
-                        button: {
-                          width: "100%",
-                        },
-                        nav_button_previous: {
-                          width: "32px",
-                          height: "32px",
-                        },
-                        nav_button_next: {
-                          width: "32px",
-                          height: "32px",
-                        },
-                      }}
-                    />
+              <SheetContent className="overflow-y-scroll px-0 [&::-webkit-scrollbar]:hidden">
+                <SheetHeader>
+                  <SheetTitle>Fazer Reserva</SheetTitle>
+                </SheetHeader>
+                <div className="border-b border-solid py-5 capitalize">
+                  <Calendar
+                    mode="single"
+                    locale={ptBR}
+                    selected={selectedDay}
+                    onSelect={setSelectedDay}
+                    fromDate={addDays(new Date(), 2)}
+                  />
+                </div>
+                {selectedDay && (
+                  <div>
+                    {timeList.length > 0 ? (
+                      <div className="flex gap-3 overflow-x-auto border-b border-solid p-5 [&::-webkit-scrollbar]:hidden">
+                        {timeList.map((time) => (
+                          <Button
+                            key={time}
+                            variant={
+                              selectedTime === time ? "default" : "outline"
+                            }
+                            className="rounded-full"
+                            onClick={() => setSelectedTime(time)}
+                          >
+                            {time}
+                          </Button>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="p-5 text-center text-sm text-red-500">
+                        Não há mais horários disponíveis para este dia!
+                      </p>
+                    )}
                   </div>
-                  {selectedDay && (
-                    <div>
-                      {timeList.length > 0 ? (
-                        <div className="flex gap-3 overflow-x-auto border-b border-solid p-5 [&::-webkit-scrollbar]:hidden">
-                          {timeList.map((time) => (
-                            <Button
-                              key={time}
-                              variant={
-                                selectedTime === time ? "default" : "outline"
-                              }
-                              className="rounded-full"
-                              onClick={() => handleTimeSelect(time)}
-                            >
-                              {time}
-                            </Button>
-                          ))}
+                )}
+                {selectedTime && selectedDay && timeList.length > 0 && (
+                  <div className="p-5">
+                    <Card>
+                      <CardContent className="space-y-3 p-3">
+                        <div className="flex items-center justify-between">
+                          <h2 className="font-bold">{service.name}</h2>
                         </div>
-                      ) : (
-                        <p className="p-5 text-center text-sm text-red-500">
-                          Não há mais horários disponíveis para este dia!
-                        </p>
-                      )}
-                    </div>
-                  )}
-                  {selectedTime && selectedDay && timeList.length > 0 && (
-                    <div className="p-5">
-                      <Card>
-                        <CardContent className="space-y-3 p-3">
-                          <div className="flex items-center justify-between">
-                            <h2 className="font-bold">{service.name}</h2>
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <h2 className="text-sm text-gray-400">Data:</h2>
-                            <p className="text-sm text-gray-300">
-                              {format(selectedDay, "d 'de' MMMM 'de' yyyy", {
-                                locale: ptBR,
-                              })}
-                            </p>
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <h2 className="text-sm text-gray-400">Horário:</h2>
-                            <p className="text-sm text-gray-300">
-                              {selectedTime}
-                            </p>
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <h2 className="text-sm text-gray-400">
-                              Instituição:
-                            </h2>
-                            <p className="text-sm text-gray-300">
-                              {educationalInstitution.name}
-                            </p>
-                          </div>
-                          <div className="mt-3 flex items-center justify-between">
-                            <h2 className="text-sm text-gray-400">
-                              Sala de aula:
-                            </h2>
-                            <Input
-                              required
-                              type="text"
-                              placeholder="Digite a sala de aula"
-                              className="w-40 rounded bg-gray-800 px-2 py-1 text-center text-sm text-gray-300 focus:outline-none focus:ring focus:ring-blue-500"
-                              value={classroom}
-                              onChange={(e) => setClassroom(e.target.value)}
-                            />
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </div>
-                  )}
-                  <SheetFooter className="mt-5 px-5">
-                    <Button
-                      onClick={handleCreateBooking}
-                      disabled={!selectedDay || !selectedTime || !classroom}
-                    >
-                      Reservar
-                    </Button>
-                  </SheetFooter>
-                </SheetContent>
-              </Sheet>
-            </div>
+                        <div className="flex items-center justify-between">
+                          <h2 className="text-sm text-gray-400">Data:</h2>
+                          <p className="text-sm text-gray-300">
+                            {format(selectedDay, "d 'de' MMMM 'de' yyyy", {
+                              locale: ptBR,
+                            })}
+                          </p>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <h2 className="text-sm text-gray-400">Horário:</h2>
+                          <p className="text-sm text-gray-300">
+                            {selectedTime}
+                          </p>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <h2 className="text-sm text-gray-400">
+                            Instituição:
+                          </h2>
+                          <p className="text-sm text-gray-300">
+                            {educationalInstitution.name}
+                          </p>
+                        </div>
+                        <div className="mt-3 flex items-center justify-between">
+                          <h2 className="text-sm text-gray-400">
+                            Sala de aula:
+                          </h2>
+                          <Input
+                            required
+                            type="text"
+                            placeholder="Digite a sala de aula"
+                            className="w-40 rounded bg-gray-800 px-2 py-1 text-center text-sm text-gray-300 focus:outline-none focus:ring focus:ring-blue-500"
+                            value={classroom}
+                            onChange={(e) => setClassroom(e.target.value)}
+                          />
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                )}
+                <SheetFooter className="mt-5 px-5">
+                  <Button
+                    onClick={handleCreateBooking}
+                    disabled={!selectedDay || !selectedTime || !classroom}
+                  >
+                    Reservar
+                  </Button>
+                </SheetFooter>
+              </SheetContent>
+            </Sheet>
           </div>
         </CardContent>
       </Card>
 
-      <Dialog
-        open={signInDialogIsOpen}
-        onOpenChange={(open) => setSignInDialogIsOpen(open)}
-      >
+      <Dialog open={signInDialogIsOpen} onOpenChange={setSignInDialogIsOpen}>
         <DialogContent className="w-[90%]">
           <SignInDialog />
         </DialogContent>
