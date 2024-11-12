@@ -154,7 +154,7 @@ const ServiceItem = ({ service, educationalInstitution }: ServiceItemProps) => {
                   <SheetHeader>
                     <SheetTitle>Fazer Reserva</SheetTitle>
                   </SheetHeader>
-                  <div className="border-b border-solid py-5">
+                  <div className="border-b border-solid py-5 capitalize">
                     <Calendar
                       mode="single"
                       locale={ptBR}
