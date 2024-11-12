@@ -106,7 +106,6 @@ const ServiceItem = ({ service, educationalInstitution }: ServiceItemProps) => {
       })
       await createBooking({
         serviceId: service.id,
-        userId: (data?.user as any).id,
         date: newDate,
         description: classroom,
       })
