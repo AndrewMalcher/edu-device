@@ -65,6 +65,7 @@ const ServiceItem = ({ service, educationalInstitution }: ServiceItemProps) => {
         serviceId: service.id,
       })
       setDayBookings(bookings)
+      setSelectedTime(undefined)
     }
     fetch()
   }, [selectedDay, service.id])
@@ -207,7 +208,7 @@ const ServiceItem = ({ service, educationalInstitution }: ServiceItemProps) => {
                       )}
                     </div>
                   )}
-                  {selectedTime && selectedDay && (
+                  {selectedTime && selectedDay && availableTimes.length > 0 && (
                     <div className="p-5">
                       <Card>
                         <CardContent className="space-y-3 p-3">
