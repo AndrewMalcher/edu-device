@@ -9,6 +9,9 @@ const nextConfig = {
         hostname: "www.unilasalle.edu.br",
       },
       {
+        hostname: "lasalle.edu.br",
+      },
+      {
         hostname: "cdn.dooca.store",
       },
       {
