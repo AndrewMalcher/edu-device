@@ -13,40 +13,52 @@ import { ptBR } from "date-fns/locale"
 import { format } from "date-fns"
 
 const Home = async () => {
+  // Recuperar sessão do usuário
   const session = await getServerSession(authOptions)
+
+  // Buscar usuário no banco de dados para obter o ID, caso necessário
+  let userId: string | undefined = undefined
+  if (session?.user?.email) {
+    const user = await db.user.findUnique({
+      where: { email: session.user.email },
+    })
+    userId = user?.id
+  }
+
   // Buscar instituições educacionais no banco de dados
-  const educationalInstitutions = await db.educationalInstitution.findMany({})
-  const confirmedBookings = session?.user
-    ? await db.booking.findMany({
-        where: {
-          userId: (session?.user as any).id,
-          date: {
-            gte: new Date(),
-          },
-        },
-        include: {
-          service: {
-            include: {
-              EducationalInstitution: true,
+  const [educationalInstitutions, confirmedBookings] = await Promise.all([
+    db.educationalInstitution.findMany(),
+    userId
+      ? db.booking.findMany({
+          where: {
+            userId,
+            date: {
+              gte: new Date(),
             },
           },
-        },
-        orderBy: {
-          date: "asc",
-        },
-      })
-    : []
+          include: {
+            service: {
+              include: {
+                EducationalInstitution: true,
+              },
+            },
+          },
+          orderBy: {
+            date: "asc",
+          },
+        })
+      : [],
+  ])
 
   return (
     <div>
       {/* HEADER */}
       <Header />
-      {/* HEADER */}
 
       {/* TEXTO */}
       <div className="p-5">
         <h2 className="text-xl font-bold">
-          Olá, {session?.user ? session.user.name : "bem vindo"}!
+          Olá, {session?.user ? session.user.name : "bem-vindo"}!
         </h2>
         <p>
           <span className="capitalize">
@@ -62,6 +74,7 @@ const Home = async () => {
         <div className="mt-6">
           <Search />
         </div>
+
         {/* BUSCA RÁPIDA */}
         <div className="mt-6 flex gap-3 overflow-x-scroll [&::-webkit-scrollbar]:hidden">
           {quickSearchOptions.map((option) => (
@@ -77,6 +90,7 @@ const Home = async () => {
             </Button>
           ))}
         </div>
+
         {/* IMAGEM */}
         <div className="relative mt-6 h-[150px] w-full">
           <Image
@@ -105,7 +119,7 @@ const Home = async () => {
         <h2 className="mb-3 mt-6 font-bold uppercase text-gray-400">MANAUS</h2>
         <div className="flex gap-4 overflow-auto [&::-webkit-scrollbar]:hidden">
           {educationalInstitutions
-            .filter((institution) => institution.name === "Faculdade La Salle") // Filtra para mostrar apenas instituições com o nome "Faculdade La Salle"
+            .filter((institution) => institution.name === "Faculdade La Salle")
             .map((institution) => (
               <EducationalInstitutionItem
                 key={institution.id}
