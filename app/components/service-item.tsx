@@ -30,23 +30,17 @@ interface ServiceItemProps {
 
 const TIME_LIST = ["18:45", "20:45"]
 
-const getTimeList = (bookings: Booking[], selectedDay: Date | undefined) => {
-  if (!selectedDay) return TIME_LIST // Se o dia não estiver selecionado, retorna todos os horários
-
+const getTimeList = (bookings: Booking[]) => {
   return TIME_LIST.filter((time) => {
     const hour = Number(time.split(":")[0])
     const minutes = Number(time.split(":")[1])
-
-    // Cria um objeto Date baseado no selectedDay com as horas e minutos do horário
-    const selectedDateTime = set(selectedDay, { hours: hour, minutes: minutes })
-
-    // Compara o horário selecionado com os horários das reservas
     const hasBookingOnCurrentTime = bookings.some(
-      (booking) => booking.date.getTime() === selectedDateTime.getTime(),
+      (booking) =>
+        booking.date.getHours() === hour &&
+        booking.date.getMinutes() === minutes,
     )
-
     if (hasBookingOnCurrentTime) {
-      return false // Se já houver reserva nesse horário, remove da lista de horários disponíveis
+      return false
     }
     return true
   })
@@ -110,7 +104,6 @@ const ServiceItem = ({ service, educationalInstitution }: ServiceItemProps) => {
         minutes: minute,
         hours: hour,
       })
-
       await createBooking({
         serviceId: service.id,
         date: newDate,
@@ -124,7 +117,7 @@ const ServiceItem = ({ service, educationalInstitution }: ServiceItemProps) => {
     }
   }
 
-  const availableTimes = getTimeList(dayBookings, selectedDay)
+  const availableTimes = getTimeList(dayBookings)
 
   return (
     <>
