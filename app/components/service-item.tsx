@@ -22,7 +22,7 @@ import { Input } from "./ui/input"
 import { getBookings } from "../_actions/get-bookings"
 import { Dialog, DialogContent } from "./ui/dialog"
 import SignInDialog from "./sign-in-dialog"
-import router from "next/router"
+import { useRouter } from "next/navigation"
 
 interface ServiceItemProps {
   service: Service
@@ -61,6 +61,7 @@ const getTimeList = ({ bookings, selectedDay }: GetTimeListProps) => {
 const ServiceItem = ({ service, educationalInstitution }: ServiceItemProps) => {
   const [signInDialogIsOpen, setSignInDialogIsOpen] = useState(false)
   const { data } = useSession()
+  const router = useRouter()
   const [classroom, setClassroom] = useState<string>("") // Novo estado para sala de aula
   const [selectedDay, setSelectedDay] = useState<Date | undefined>(undefined)
   const [selectedTime, setSelectedTime] = useState<string | undefined>(
