@@ -13,8 +13,8 @@ import {
   SheetTitle,
 } from "./ui/sheet"
 import { Calendar } from "@/app/components/ui/calendar"
-import { useEffect, useState } from "react"
-import { addDays, format, set } from "date-fns"
+import { useEffect, useMemo, useState } from "react"
+import { addDays, format, isPast, isToday, set } from "date-fns"
 import { useSession } from "next-auth/react"
 import { createBooking } from "../_actions/create-booking"
 import { toast } from "sonner"
@@ -22,6 +22,7 @@ import { Input } from "./ui/input"
 import { getBookings } from "../_actions/get-bookings"
 import { Dialog, DialogContent } from "./ui/dialog"
 import SignInDialog from "./sign-in-dialog"
+import router from "next/router"
 
 interface ServiceItemProps {
   service: Service
@@ -30,10 +31,21 @@ interface ServiceItemProps {
 
 const TIME_LIST = ["18:45", "20:45"]
 
-const getTimeList = (bookings: Booking[]) => {
+interface GetTimeListProps {
+  bookings: Booking[]
+  selectedDay: Date
+}
+
+const getTimeList = ({ bookings, selectedDay }: GetTimeListProps) => {
   return TIME_LIST.filter((time) => {
     const hour = Number(time.split(":")[0])
     const minutes = Number(time.split(":")[1])
+
+    const timeIsOnThePast = isPast(set(new Date(), { hours: hour, minutes }))
+    if (timeIsOnThePast && isToday(selectedDay)) {
+      return false
+    }
+
     const hasBookingOnCurrentTime = bookings.some(
       (booking) =>
         booking.date.getHours() === hour &&
@@ -65,10 +77,17 @@ const ServiceItem = ({ service, educationalInstitution }: ServiceItemProps) => {
         serviceId: service.id,
       })
       setDayBookings(bookings)
-      setSelectedTime(undefined)
     }
     fetch()
   }, [selectedDay, service.id])
+
+  const selectedDate = useMemo(() => {
+    if (!selectedDay || !selectedTime) return
+    return set(selectedDay, {
+      hours: Number(selectedTime?.split(":")[0]),
+      minutes: Number(selectedTime?.split(":")[1]),
+    })
+  }, [selectedDay, selectedTime])
 
   const handleBookingClick = () => {
     if (data?.user) {
@@ -94,30 +113,33 @@ const ServiceItem = ({ service, educationalInstitution }: ServiceItemProps) => {
   }
 
   const handleCreateBooking = async () => {
-    //1. não exibir horários que já foram agendados
     try {
-      if (!selectedDay || !selectedTime || !classroom) return
-      //["09:00 || "00]
-      const hour = Number(selectedTime.split(":")[0])
-      const minute = Number(selectedTime.split(":")[1])
-      const newDate = set(selectedDay, {
-        minutes: minute,
-        hours: hour,
-      })
+      if (!selectedDate) return
       await createBooking({
         serviceId: service.id,
-        date: newDate,
+        date: selectedDate,
         description: classroom,
       })
       handleBookingSheetOpenChange()
-      toast.success("Reserva criada com sucesso")
+      toast.success("Reserva criada com sucesso!", {
+        action: {
+          label: "Ver agendamentos",
+          onClick: () => router.push("/bookings"),
+        },
+      })
     } catch (error) {
       console.error(error)
-      toast.error("Erro ao criar reserva")
+      toast.error("Erro ao criar reserva!")
     }
   }
 
-  const availableTimes = getTimeList(dayBookings)
+  const timeList = useMemo(() => {
+    if (!selectedDay) return []
+    return getTimeList({
+      bookings: dayBookings,
+      selectedDay,
+    })
+  }, [dayBookings, selectedDay])
 
   return (
     <>
@@ -185,9 +207,9 @@ const ServiceItem = ({ service, educationalInstitution }: ServiceItemProps) => {
                   </div>
                   {selectedDay && (
                     <div>
-                      {availableTimes.length > 0 ? (
+                      {timeList.length > 0 ? (
                         <div className="flex gap-3 overflow-x-auto border-b border-solid p-5 [&::-webkit-scrollbar]:hidden">
-                          {availableTimes.map((time) => (
+                          {timeList.map((time) => (
                             <Button
                               key={time}
                               variant={
@@ -207,7 +229,7 @@ const ServiceItem = ({ service, educationalInstitution }: ServiceItemProps) => {
                       )}
                     </div>
                   )}
-                  {selectedTime && selectedDay && availableTimes.length > 0 && (
+                  {selectedTime && selectedDay && timeList.length > 0 && (
                     <div className="p-5">
                       <Card>
                         <CardContent className="space-y-3 p-3">
