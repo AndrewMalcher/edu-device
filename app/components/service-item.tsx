@@ -41,7 +41,7 @@ const getTimeList = ({ bookings, selectedDay }: GetTimeListProps) => {
     const hour = Number(time.split(":")[0])
     const minutes = Number(time.split(":")[1])
 
-    const timeIsOnThePast = isPast(set(new Date(), { hours: hour, minutes }))
+    const timeIsOnThePast = isPast(set(selectedDay, { hours: hour, minutes }))
     if (timeIsOnThePast && isToday(selectedDay)) {
       return false
     }
@@ -118,9 +118,7 @@ const ServiceItem = ({ service, educationalInstitution }: ServiceItemProps) => {
         milliseconds: 0,
       })
 
-      const utcDate = new Date(
-        newDate.getTime() - newDate.getTimezoneOffset() * 60000,
-      )
+      const utcDate = new Date(newDate)
 
       await createBooking({
         serviceId: service.id,
