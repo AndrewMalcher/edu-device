@@ -103,10 +103,17 @@ const ServiceItem = ({ service, educationalInstitution }: ServiceItemProps) => {
       const newDate = set(selectedDay, {
         minutes: minute,
         hours: hour,
+        seconds: 0,
+        milliseconds: 0,
       })
+
+      const utcDate = new Date(
+        newDate.getTime() - newDate.getTimezoneOffset() * 60000,
+      )
+
       await createBooking({
         serviceId: service.id,
-        date: newDate,
+        date: utcDate,
         description: classroom,
       })
       handleBookingSheetOpenChange()
