@@ -28,7 +28,22 @@ interface ServiceItemProps {
   educationalInstitution: Pick<EducationalInstitution, "name">
 }
 
-const TIME_LIST = ["18:45", "20:45"]
+const TIME_LIST = [
+  "06:45",
+  "07:45",
+  "08:45",
+  "09:45",
+  "10:45",
+  "11:45",
+  "12:45",
+  "13:45",
+  "14:45",
+  "15:45",
+  "16:45",
+  "17:45",
+  "18:45",
+  "19:45",
+]
 
 const getTimeList = (bookings: Booking[]) => {
   return TIME_LIST.filter((time) => {
