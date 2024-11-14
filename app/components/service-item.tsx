@@ -45,6 +45,7 @@ const TIME_LIST = [
   "17:35",
   "18:25",
   "19:15",
+  "20:45",
 ]
 
 const getTimeList = (bookings: Booking[]) => {
@@ -53,7 +54,7 @@ const getTimeList = (bookings: Booking[]) => {
     const minutes = Number(time.split(":")[1])
     const hasBookingOnCurrentTime = bookings.some(
       (booking) =>
-        booking.date.getHours() === hour &&
+        booking.date.getHours() === hour - 4 &&
         booking.date.getMinutes() === minutes,
     )
     if (hasBookingOnCurrentTime) {
@@ -119,7 +120,7 @@ const ServiceItem = ({ service, educationalInstitution }: ServiceItemProps) => {
       const minute = Number(selectedTime.split(":")[1])
       const newDate = set(selectedDay, {
         minutes: minute,
-        hours: hour,
+        hours: hour - 4,
       })
       await createBooking({
         serviceId: service.id,
