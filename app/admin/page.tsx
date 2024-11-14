@@ -12,7 +12,6 @@ const Booking = async () => {
   }
   const confirmedBookings = await db.booking.findMany({
     where: {
-      userId: (session?.user as any).id,
       date: {
         gte: new Date(),
       },
@@ -31,7 +30,6 @@ const Booking = async () => {
   })
   const concludedBookings = await db.booking.findMany({
     where: {
-      userId: (session?.user as any).id,
       date: {
         lt: new Date(),
       },

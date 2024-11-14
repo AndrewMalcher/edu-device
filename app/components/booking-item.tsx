@@ -33,7 +33,10 @@ import { useState } from "react"
 
 interface BookingItemProps {
   booking: Prisma.BookingGetPayload<{
-    include: { service: { include: { EducationalInstitution: true } } }
+    include: {
+      service: { include: { EducationalInstitution: true } }
+      user: true
+    }
   }>
 }
 
