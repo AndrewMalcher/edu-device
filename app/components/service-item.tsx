@@ -22,6 +22,7 @@ import { Input } from "./ui/input"
 import { getBookings } from "../_actions/get-bookings"
 import { Dialog, DialogContent } from "./ui/dialog"
 import SignInDialog from "./sign-in-dialog"
+import { fromZonedTime } from "date-fns-tz"
 
 interface ServiceItemProps {
   service: Service
@@ -48,13 +49,23 @@ const TIME_LIST = [
   "20:45",
 ]
 
+function convertTimeToUTC({
+  date,
+  timeZone,
+}: {
+  date: Date
+  timeZone: string
+}) {
+  const utcDate = fromZonedTime(date, timeZone)
+  return utcDate // Horário local const utcDate = zonedTimeToUtc(localDate, 'America/Sao_Paulo')
+}
 const getTimeList = (bookings: Booking[]) => {
   return TIME_LIST.filter((time) => {
     const hour = Number(time.split(":")[0])
     const minutes = Number(time.split(":")[1])
     const hasBookingOnCurrentTime = bookings.some(
       (booking) =>
-        booking.date.getHours() === hour - 4 &&
+        booking.date.getHours() === hour &&
         booking.date.getMinutes() === minutes,
     )
     if (hasBookingOnCurrentTime) {
@@ -79,7 +90,10 @@ const ServiceItem = ({ service, educationalInstitution }: ServiceItemProps) => {
     const fetch = async () => {
       if (!selectedDay) return
       const bookings = await getBookings({
-        date: selectedDay,
+        date: convertTimeToUTC({
+          date: selectedDay,
+          timeZone: "America/Manaus",
+        }),
         serviceId: service.id,
       })
       setDayBookings(bookings)
@@ -120,11 +134,11 @@ const ServiceItem = ({ service, educationalInstitution }: ServiceItemProps) => {
       const minute = Number(selectedTime.split(":")[1])
       const newDate = set(selectedDay, {
         minutes: minute,
-        hours: hour - 4,
+        hours: hour,
       })
       await createBooking({
         serviceId: service.id,
-        date: newDate,
+        date: convertTimeToUTC({ date: newDate, timeZone: "America/Manaus" }),
         description: classroom,
       })
       handleBookingSheetOpenChange()
