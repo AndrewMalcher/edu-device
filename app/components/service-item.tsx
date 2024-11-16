@@ -60,6 +60,7 @@ function convertTimeToUTC({
   return utcDate // Horário local const utcDate = zonedTimeToUtc(localDate, 'America/Sao_Paulo')
 }
 const getTimeList = (bookings: Booking[]) => {
+  console.log(bookings)
   return TIME_LIST.filter((time) => {
     const hour = Number(time.split(":")[0])
     const minutes = Number(time.split(":")[1])
