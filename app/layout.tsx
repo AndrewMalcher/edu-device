@@ -5,6 +5,8 @@ import { Toaster } from "sonner"
 import { Card, CardContent } from "./components/ui/card"
 import AuthProvider from "./_providers/auth"
 
+process.env.TZ = "America/Manaus"
+
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
