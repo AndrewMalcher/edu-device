@@ -96,6 +96,10 @@ const EducationalInstitutionPage = async ({
 
       {/* CONTATOS */}
       <div className="space-y-3 p-5">
+        <h2 className="text-xs font-bold uppercase text-gray-400">
+          Dúvidas? entre em contato com o setor responsável.
+        </h2>
+
         {institution.phones.map((phone) => (
           <PhoneItem key={phone} phone={phone} />
         ))}

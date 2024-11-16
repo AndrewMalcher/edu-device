@@ -164,6 +164,9 @@ const BookingItem = ({ booking }: BookingItemProps) => {
             </CardContent>
           </Card>
           <div className="space-y-3">
+            <h2 className="text-xs font-bold uppercase text-gray-400">
+              Dúvidas? Entre em contato com o setor responsável.
+            </h2>
             {EducationalInstitution.phones.map((phone, index) => (
               <PhoneItem key={index} phone={phone} />
             ))}

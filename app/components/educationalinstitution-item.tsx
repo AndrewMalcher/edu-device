@@ -34,7 +34,7 @@ const educationalinstitutionItem = ({
           </p>
           <Button variant="secondary" className="mt-3 w-full" asChild>
             <Link href={`/institutions/${educationalinstitution.id}`}>
-              Reservar
+              Ver Serviços
             </Link>
           </Button>
         </div>
