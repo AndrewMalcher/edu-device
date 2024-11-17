@@ -34,8 +34,10 @@ import { useState } from "react"
 interface BookingItemProps {
   booking: Prisma.BookingGetPayload<{
     include: {
-      service: { include: { EducationalInstitution: true } }
-      user: true
+      service: {
+        include: { EducationalInstitution: true }
+      }
+      user: { select: { name: true; image: true } } // Incluindo o usuário que fez a reserva
     }
   }>
 }
@@ -43,6 +45,8 @@ interface BookingItemProps {
 const BookingItem = ({ booking }: BookingItemProps) => {
   const [isSheetOpen, setIsSheetOpen] = useState(false)
   const { EducationalInstitution } = booking.service
+  const userName = booking.user?.name || "Usuário desconhecido"
+  const userImage = booking.user?.image || "Usuário desconhecido"
   const isConfirmed = isFuture(booking.date)
 
   const handleCancelBooking = async () => {
@@ -65,14 +69,22 @@ const BookingItem = ({ booking }: BookingItemProps) => {
         <Card className="min-w-[90%]">
           <CardContent className="flex justify-between p-0">
             {/* ESQUERDA */}
-            <div className="flex flex-col gap-2 py-5 pl-5">
+            <div className="items-left flex flex-col gap-2 py-5 pl-5">
               <Badge
                 className="w-fit"
                 variant={isConfirmed ? "default" : "secondary"}
               >
                 {isConfirmed ? "Confirmado" : "Finalizado"}
               </Badge>
-              <h3 className="font-semibold">{booking.service.name}</h3>
+              <h3 className="text-left font-semibold">
+                {booking.service.name}
+              </h3>
+              <div className="flex items-center gap-2 pr-2">
+                <p className="text-sm font-light">Autor: {userName}</p>
+                <Avatar>
+                  <AvatarImage src={userImage} />
+                </Avatar>
+              </div>
               <div className="flex items-center gap-2">
                 <Avatar className="h-6 w-6">
                   <AvatarImage src={EducationalInstitution.imageUrl} />
@@ -80,7 +92,7 @@ const BookingItem = ({ booking }: BookingItemProps) => {
                 <p className="border-r-2 border-solid px-1 text-sm">
                   {EducationalInstitution.name}
                 </p>
-                <p className="px-2">{booking.description}</p>
+                <p className="px-2">Sala de aula:{booking.description}</p>
               </div>
             </div>
             {/* DIREITA */}
@@ -156,6 +168,10 @@ const BookingItem = ({ booking }: BookingItemProps) => {
                 <p className="text-sm text-gray-300">
                   {EducationalInstitution.name}
                 </p>
+              </div>
+              <div className="flex items-center justify-between">
+                <h2 className="text-sm text-gray-400">Reserva feita por:</h2>
+                <p className="text-sm text-gray-300">{userName}</p>
               </div>
               <div className="mt-3 flex items-center justify-between">
                 <h2 className="text-sm text-gray-400">Sala de aula:</h2>

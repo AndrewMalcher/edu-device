@@ -17,12 +17,10 @@ const Booking = async () => {
       },
     },
     include: {
-      user: true,
       service: {
-        include: {
-          EducationalInstitution: true,
-        },
+        include: { EducationalInstitution: true },
       },
+      user: { select: { name: true, image: true } }, // Incluindo o usuário que fez a reserva
     },
     orderBy: {
       date: "asc",
@@ -35,12 +33,10 @@ const Booking = async () => {
       },
     },
     include: {
-      user: true,
       service: {
-        include: {
-          EducationalInstitution: true,
-        },
+        include: { EducationalInstitution: true },
       },
+      user: { select: { name: true, image: true } }, // Incluindo o usuário que fez a reserva
     },
     orderBy: {
       date: "asc",
