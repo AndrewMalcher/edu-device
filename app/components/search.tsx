@@ -12,7 +12,7 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from "./ui/form"
 
 const formSchema = z.object({
   title: z.string().trim().min(1, {
-    message: "Digite o nome da instituição para buscar",
+    message: "Digite algo para buscar",
   }),
 })
 
@@ -39,7 +39,7 @@ const Search = () => {
             <FormItem className="w-full">
               <FormControl>
                 <Input
-                  placeholder="Faça sua busca..."
+                  placeholder="Digite o nome da instituição..."
                   {...field}
                   className="w-full"
                 />
