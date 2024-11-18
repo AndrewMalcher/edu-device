@@ -22,8 +22,13 @@ const Home = async () => {
   if (session?.user?.email) {
     const user = await db.user.findUnique({
       where: { email: session.user.email },
+      select: {
+        id: true,
+        role: true, // Inclua o campo `role` aqui
+      },
     })
     userId = user?.id
+    // userRole = user?.role
   }
 
   // Buscar instituições educacionais no banco de dados
@@ -41,6 +46,12 @@ const Home = async () => {
             service: {
               include: {
                 EducationalInstitution: true,
+              },
+            },
+            user: {
+              select: {
+                name: true,
+                image: true,
               },
             },
           },
