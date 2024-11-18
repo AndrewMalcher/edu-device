@@ -50,6 +50,11 @@ const Home = async () => {
         })
       : [],
   ])
+  const popularInstitution = await db.educationalInstitution.findMany({
+    orderBy: {
+      name: "desc",
+    },
+  })
 
   const timeZone = "America/Manaus"
 
@@ -122,17 +127,27 @@ const Home = async () => {
           </>
         )}
 
+        <h2 className="mb-3 mt-6 text-xs font-bold uppercase text-gray-400">
+          Recomendados
+        </h2>
+        <div className="flex gap-4 overflow-auto [&::-webkit-scrollbar]:hidden">
+          {educationalInstitutions.map((educationalInstitutions) => (
+            <EducationalInstitutionItem
+              key={educationalInstitutions.id}
+              educationalinstitution={educationalInstitutions}
+            />
+          ))}
+        </div>
+
         {/* POPULARES */}
         <h2 className="mb-3 mt-6 font-bold uppercase text-gray-400">MANAUS</h2>
         <div className="flex gap-4 overflow-auto [&::-webkit-scrollbar]:hidden">
-          {educationalInstitutions
-            .filter((institution) => institution.name === "Faculdade La Salle")
-            .map((institution) => (
-              <EducationalInstitutionItem
-                key={institution.id}
-                educationalinstitution={institution}
-              />
-            ))}
+          {popularInstitution.map((educationalInstitutions) => (
+            <EducationalInstitutionItem
+              key={educationalInstitutions.id}
+              educationalinstitution={educationalInstitutions}
+            />
+          ))}
         </div>
       </div>
     </div>

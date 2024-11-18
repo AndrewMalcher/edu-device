@@ -17,6 +17,18 @@ const nextConfig = {
       {
         hostname: "images.tcdn.com.br",
       },
+      {
+        hostname: "samsungbrshop.vtexassets.com",
+      },
+      {
+        hostname: "images.unsplash.com",
+      },
+      {
+        hostname: "i.dell.com",
+      },
+      {
+        hostname: "media.canva.com",
+      },
     ],
   },
 }

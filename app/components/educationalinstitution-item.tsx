@@ -19,7 +19,7 @@ const educationalinstitutionItem = ({
           <Image
             alt={educationalinstitution.name}
             fill
-            className="rounded-2xl object-contain"
+            className="object-fit rounded-2xl"
             src={educationalinstitution.imageUrl}
           />
         </div>

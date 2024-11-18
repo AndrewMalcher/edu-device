@@ -162,7 +162,8 @@ const ServiceItem = ({ service, educationalInstitution }: ServiceItemProps) => {
               alt={service.name}
               src={service.imageUrl}
               fill
-              className="rounded-lg object-cover"
+              sizes="33vw"
+              className="rounded-lg object-center"
             />
           </div>
 
