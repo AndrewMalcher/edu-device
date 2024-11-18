@@ -12,7 +12,7 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from "./ui/form"
 
 const formSchema = z.object({
   title: z.string().trim().min(1, {
-    message: "Digite algo para buscar",
+    message: "Digite o nome da instituição para buscar",
   }),
 })
 

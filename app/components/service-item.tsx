@@ -23,6 +23,7 @@ import { getBookings } from "../_actions/get-bookings"
 import { Dialog, DialogContent } from "./ui/dialog"
 import SignInDialog from "./sign-in-dialog"
 import { fromZonedTime } from "date-fns-tz"
+import { useRouter } from "next/navigation"
 
 interface ServiceItemProps {
   service: Service
@@ -79,6 +80,7 @@ const getTimeList = (bookings: Booking[]) => {
 const ServiceItem = ({ service, educationalInstitution }: ServiceItemProps) => {
   const [signInDialogIsOpen, setSignInDialogIsOpen] = useState(false)
   const { data } = useSession()
+  const router = useRouter()
   const [classroom, setClassroom] = useState<string>("") // Novo estado para sala de aula
   const [selectedDay, setSelectedDay] = useState<Date | undefined>(undefined)
   const [selectedTime, setSelectedTime] = useState<string | undefined>(
@@ -143,7 +145,12 @@ const ServiceItem = ({ service, educationalInstitution }: ServiceItemProps) => {
         description: classroom,
       })
       handleBookingSheetOpenChange()
-      toast.success("Reserva criada com sucesso")
+      toast.success("Reserva criada com sucesso", {
+        action: {
+          label: "Ver agendamentos",
+          onClick: () => router.push("/bookings"),
+        },
+      })
     } catch (error) {
       console.error(error)
       toast.error("Erro ao criar reserva")
