@@ -117,7 +117,7 @@ const Home = async () => {
             alt="Agende com as melhores instituições"
             className="rounded-xl object-cover"
             fill
-            src="/Banner01.png"
+            src="/Banner01.jpeg"
           />
         </div>
 
