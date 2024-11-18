@@ -92,7 +92,7 @@ const BookingItem = ({ booking }: BookingItemProps) => {
                 <p className="border-r-2 border-solid px-1 text-sm">
                   {EducationalInstitution.name}
                 </p>
-                <p className="px-2">Sala de aula:{booking.description}</p>
+                <p className="px-2">Sala de aula: {booking.description}</p>
               </div>
             </div>
             {/* DIREITA */}

@@ -16,6 +16,13 @@ const SidebarSheet = () => {
   const { data } = useSession()
   const handleLogoutWithGoogleCLick = () => signOut()
 
+  // PARA APARECER O BOTÃO DE VISÃO GERAL DE AGENDAMENTOS, É NECESSÁRIO QUE ALTERE TAMBÉM NO ARQUIVO APP/ADMIN/PAGE.TSX
+  const allowedEmails = [
+    "andrew.malcher.r@gmail.com",
+    "andrew.malcher@lasalle.org.br",
+    "gabrielsouza.porto@lasalle.org.br",
+  ]
+
   return (
     <SheetContent className="overflow-y-auto">
       <SheetHeader>
@@ -67,12 +74,14 @@ const SidebarSheet = () => {
           </Link>
         </Button>
 
-        <Button className="justify-start gap-2" variant="ghost" asChild>
-          <Link href="/admin">
-            <CalendarIcon size={18} />
-            Visão Geral de Agendamentos
-          </Link>
-        </Button>
+        {allowedEmails.includes(data?.user?.email ?? "") && (
+          <Button className="justify-start gap-2" variant="ghost" asChild>
+            <Link href="/admin">
+              <CalendarIcon size={18} />
+              Visão Geral de Agendamentos
+            </Link>
+          </Button>
+        )}
       </div>
       {data?.user && (
         <div className="flex flex-col gap-4 border-b border-solid py-5">
