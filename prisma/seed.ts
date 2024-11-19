@@ -5,13 +5,13 @@ async function seedEducationalInstitution() {
   try {
     const institution = await prisma.educationalInstitution.create({
       data: {
-        name: "Virtus Academy",
-        address: "Av. Futuro, 1234, Centro, Cidade Fictícia",
+        name: "NovaTech Academy Institution Educational",
+        address: "Av. Futuro, 5432, Centro, Cidade Fictícia",
         phones: ["(99) 91234-5678", "(99) 98765-4321"],
         description:
-          "A Virtus Academy é uma instituição de ensino moderna e inovadora, com foco em formar líderes para o futuro. Oferece uma infraestrutura de ponta e um ambiente acolhedor para estudantes de todas as idades.",
+          "A NovaTech Academy é uma instituição de ensino moderna e inovadora, com foco em formar líderes para o futuro. Oferece uma infraestrutura de ponta e um ambiente acolhedor para estudantes de todas as idades.",
         imageUrl:
-          "https://files.oaiusercontent.com/file-ZQ8rJDMPzfqj4wHZMskZMup8?se=2024-11-18T17%3A30%3A21Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3Daabcc31e-c621-4f8b-8beb-f72d06867f84.webp&sig=VXWSwpN2Ln/v%2BCC2VWiOXsaNYprhTq98UiXgtCP9dVc%3D", // substitua pelo link da imagem gerada
+          "https://media.canva.com/v2/image-resize/format:JPG/height:550/quality:92/uri:s3%3A%2F%2Fmedia-private.canva.com%2FLcttc%2FMAGW33Lcttc%2F1%2Fp.jpg/watermark:F/width:550?csig=AAAAAAAAAAAAAAAAAAAAAOkZLeWl1GtI2LaisRB-O1ZqbSQloh4ZtYrIF2Zp_KDR&exp=1731991297&osig=AAAAAAAAAAAAAAAAAAAAALcUYYE7BzDJUuwck1GmMeCOXcH4FhOgOUTUn46tr0k5&signer=media-rpc&x-canva-quality=thumbnail_large",
         services: {
           create: [
             {
@@ -61,6 +61,27 @@ async function seedEducationalInstitution() {
               description: "1 UNIDADE DE NOTEBOOK PARA USO EM SALA DE AULA",
               imageUrl:
                 "https://i.dell.com/is/image/DellContent//content/dam/ss2/product-images/dell-client-products/notebooks/latitude-notebooks/14-3420/media-gallery/peripherals_laptop_latitude_3420nt_gallery_3.psd?fmt=png-alpha&pscan=auto&scl=1&hei=402&wid=573&qlt=100,1&resMode=sharp2&size=573,402&chrss=full",
+            },
+            {
+              name: "PROJETOR EPSON 01",
+              description:
+                "1 UNIDADE DE PROJETOR DA MARCA EPSON PARA USO EM SALA DE AULA",
+              imageUrl:
+                "https://media.canva.com/v2/image-resize/format:JPG/height:550/quality:92/uri:s3%3A%2F%2Fmedia-private.canva.com%2FL14mA%2FMAGW34L14mA%2F1%2Fp.jpg/watermark:F/width:550?csig=AAAAAAAAAAAAAAAAAAAAAOONJOoT2IKFINKCDqZBS-2AW-y3lIJj4Oi7BoSvIA7W&exp=1731990525&osig=AAAAAAAAAAAAAAAAAAAAALuGjkBkXA-6dr0LM43LAZjrTi3dMBpdLxcmnfzpk1SG&signer=media-rpc&x-canva-quality=thumbnail_large",
+            },
+            {
+              name: "PROJETOR EPSON 02",
+              description:
+                "1 UNIDADE DE PROJETOR DA MARCA EPSON PARA USO EM SALA DE AULA",
+              imageUrl:
+                "https://media.canva.com/v2/image-resize/format:JPG/height:550/quality:92/uri:s3%3A%2F%2Fmedia-private.canva.com%2FL14mA%2FMAGW34L14mA%2F1%2Fp.jpg/watermark:F/width:550?csig=AAAAAAAAAAAAAAAAAAAAAOONJOoT2IKFINKCDqZBS-2AW-y3lIJj4Oi7BoSvIA7W&exp=1731990525&osig=AAAAAAAAAAAAAAAAAAAAALuGjkBkXA-6dr0LM43LAZjrTi3dMBpdLxcmnfzpk1SG&signer=media-rpc&x-canva-quality=thumbnail_large",
+            },
+            {
+              name: "PROJETOR EPSON 03",
+              description:
+                "1 UNIDADE DE PROJETOR DA MARCA EPSON PARA USO EM SALA DE AULA",
+              imageUrl:
+                "https://media.canva.com/v2/image-resize/format:JPG/height:550/quality:92/uri:s3%3A%2F%2Fmedia-private.canva.com%2FL14mA%2FMAGW34L14mA%2F1%2Fp.jpg/watermark:F/width:550?csig=AAAAAAAAAAAAAAAAAAAAAOONJOoT2IKFINKCDqZBS-2AW-y3lIJj4Oi7BoSvIA7W&exp=1731990525&osig=AAAAAAAAAAAAAAAAAAAAALuGjkBkXA-6dr0LM43LAZjrTi3dMBpdLxcmnfzpk1SG&signer=media-rpc&x-canva-quality=thumbnail_large",
             },
           ],
         },

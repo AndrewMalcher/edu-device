@@ -142,23 +142,28 @@ const Home = async () => {
           Recomendados
         </h2>
         <div className="flex gap-4 overflow-auto [&::-webkit-scrollbar]:hidden">
-          {educationalInstitutions.map((educationalInstitutions) => (
-            <EducationalInstitutionItem
-              key={educationalInstitutions.id}
-              educationalinstitution={educationalInstitutions}
-            />
-          ))}
+          {educationalInstitutions
+            .filter((institution) => institution.name !== "Faculdade La Salle")
+            .map((educationalInstitutions) => (
+              <EducationalInstitutionItem
+                key={educationalInstitutions.id}
+                educationalinstitution={educationalInstitutions}
+              />
+            ))}
         </div>
 
-        {/* POPULARES */}
-        <h2 className="mb-3 mt-6 font-bold uppercase text-gray-400">MANAUS</h2>
+        <h2 className="mb-3 mt-6 font-bold uppercase text-gray-400">
+          Populares
+        </h2>
         <div className="flex gap-4 overflow-auto [&::-webkit-scrollbar]:hidden">
-          {popularInstitution.map((educationalInstitutions) => (
-            <EducationalInstitutionItem
-              key={educationalInstitutions.id}
-              educationalinstitution={educationalInstitutions}
-            />
-          ))}
+          {popularInstitution
+            .filter((institution) => institution.name !== "Faculdade La Salle")
+            .map((institution) => (
+              <EducationalInstitutionItem
+                key={institution.id}
+                educationalinstitution={institution}
+              />
+            ))}
         </div>
       </div>
     </div>
