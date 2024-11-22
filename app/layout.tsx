@@ -2,8 +2,8 @@ import type { Metadata } from "next"
 import localFont from "next/font/local"
 import "./globals.css"
 import { Toaster } from "sonner"
-import { Card, CardContent } from "./components/ui/card"
 import AuthProvider from "./_providers/auth"
+import Footer from "./components/footer"
 
 process.env.TZ = "America/Manaus"
 
@@ -36,17 +36,7 @@ export default function RootLayout({
         <AuthProvider>
           <div className="flex h-full flex-col">
             <div className="flex-1">{children}</div>
-
-            <footer>
-              <Card>
-                <CardContent className="px-5 py-6">
-                  <p className="text-sm text-gray-400">
-                    © 2024 Copyright{" "}
-                    <span className="font-bold">Andrew Malcher</span>
-                  </p>
-                </CardContent>
-              </Card>
-            </footer>
+            <Footer />
           </div>
 
           <Toaster />

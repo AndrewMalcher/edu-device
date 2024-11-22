@@ -27,13 +27,13 @@ const EducationalInstitutionPage = async ({
   })
 
   if (!institution) {
-    return <div>Educational Institution not found</div>
+    return <div>Instituição Educacional não encontrada</div>
   }
 
   return (
     <div>
       {/* IMAGEM */}
-      <div className="relative h-[250px] w-full">
+      <div className="relative h-[250px] w-full md:h-[400px]">
         <Image
           alt={institution.name}
           src={institution.imageUrl}
@@ -44,7 +44,7 @@ const EducationalInstitutionPage = async ({
         <Button
           size="icon"
           variant="secondary"
-          className="absolute left-4 top-4"
+          className="absolute left-4 top-4 md:left-8 md:top-8"
         >
           <Link href="/">
             <ChevronLeftIcon />
@@ -56,7 +56,7 @@ const EducationalInstitutionPage = async ({
             <Button
               size="icon"
               variant="outline"
-              className="absolute right-4 top-4"
+              className="absolute right-4 top-4 md:right-8 md:top-8"
             >
               <MenuIcon />
             </Button>
@@ -66,24 +66,34 @@ const EducationalInstitutionPage = async ({
       </div>
 
       {/* TÍTULO DA INSTITUIÇÃO */}
-      <div className="border-b border-solid p-5">
-        <h1 className="mb-3 text-xl font-bold">{institution.name}</h1>
+      <div className="border-b border-solid p-5 md:p-8">
+        <h1 className="mb-3 text-xl font-bold md:text-3xl">
+          {institution.name}
+        </h1>
         <div className="flex items-center gap-1">
           <MapPinIcon className="text-primary" size={18} />
-          <p className="text-sm text-gray-400">{institution.address}</p>
+          <p className="text-sm text-gray-400 md:text-base">
+            {institution.address}
+          </p>
         </div>
       </div>
 
       {/* DESCRIÇÃO */}
-      <div className="space-y-2 border-b border-solid p-5">
-        <h2 className="text-xs font-bold uppercase text-gray-400">Sobre nós</h2>
-        <p className="text-justify">{institution.description}</p>
+      <div className="space-y-2 border-b border-solid p-5 md:p-8">
+        <h2 className="text-xs font-bold uppercase text-gray-400 md:text-sm">
+          Sobre nós
+        </h2>
+        <p className="text-justify text-sm md:text-base">
+          {institution.description}
+        </p>
       </div>
 
       {/* SERVIÇOS */}
-      <div className="space-y-3 border-b border-solid p-5">
-        <h2 className="text-xs font-bold uppercase text-gray-400">Serviços</h2>
-        <div className="space-y-3">
+      <div className="space-y-3 border-b border-solid p-5 md:p-8">
+        <h2 className="text-xs font-bold uppercase text-gray-400 md:text-sm">
+          Serviços
+        </h2>
+        <div className="grid grid-cols-1 gap-4 space-y-3 md:grid-cols-2 lg:grid-cols-4">
           {institution.services.map((service) => (
             <ServiceItem
               key={service.id}
@@ -95,9 +105,9 @@ const EducationalInstitutionPage = async ({
       </div>
 
       {/* CONTATOS */}
-      <div className="space-y-3 p-5">
-        <h2 className="text-xs font-bold uppercase text-gray-400">
-          Dúvidas? entre em contato com o setor responsável.
+      <div className="space-y-3 p-5 md:p-8">
+        <h2 className="text-xs font-bold uppercase text-gray-400 md:text-sm">
+          Dúvidas? Entre em contato com o setor responsável.
         </h2>
 
         {institution.phones.map((phone) => (

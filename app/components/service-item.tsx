@@ -14,7 +14,7 @@ import {
 } from "./ui/sheet"
 import { Calendar } from "@/app/components/ui/calendar"
 import { useEffect, useState } from "react"
-import { addDays, format, set } from "date-fns"
+import { addDays, format, isSunday, set } from "date-fns"
 import { useSession } from "next-auth/react"
 import { createBooking } from "../_actions/create-booking"
 import { toast } from "sonner"
@@ -191,17 +191,19 @@ const ServiceItem = ({ service, educationalInstitution }: ServiceItemProps) => {
                 </Button>
 
                 {/* DIREITA */}
-                <SheetContent className="overflow-y-scroll px-0 [&::-webkit-scrollbar]:hidden">
+                <SheetContent className="overflow-y-auto px-0">
                   <SheetHeader>
                     <SheetTitle>Fazer Reserva</SheetTitle>
                   </SheetHeader>
-                  <div className="border-b border-solid py-5 capitalize">
+                  <div className="border-b border-solid py-5">
                     <Calendar
                       mode="single"
                       locale={ptBR}
+                      className="w-full capitalize"
                       selected={selectedDay}
                       onSelect={handleDateSelect}
                       fromDate={addDays(new Date(), 2)}
+                      disabled={(date) => isSunday(date)}
                       styles={{
                         head_cell: {
                           width: "100%",
@@ -225,7 +227,7 @@ const ServiceItem = ({ service, educationalInstitution }: ServiceItemProps) => {
                     />
                   </div>
                   {selectedDay && (
-                    <div>
+                    <div className="no-scrollbar flex gap-3 overflow-x-auto px-5">
                       {availableTimes.length > 0 ? (
                         <div className="flex gap-3 overflow-x-auto border-b border-solid p-5 [&::-webkit-scrollbar]:hidden">
                           {availableTimes.map((time) => (
@@ -242,7 +244,7 @@ const ServiceItem = ({ service, educationalInstitution }: ServiceItemProps) => {
                           ))}
                         </div>
                       ) : (
-                        <p className="p-5 text-center text-sm text-red-500">
+                        <p className="flex h-9 w-full items-center justify-center text-center text-sm">
                           Não há mais horários disponíveis para este dia!
                         </p>
                       )}
@@ -269,11 +271,11 @@ const ServiceItem = ({ service, educationalInstitution }: ServiceItemProps) => {
                               {selectedTime}
                             </p>
                           </div>
-                          <div className="flex items-center justify-between">
+                          <div className="flex w-full items-center justify-between gap-3">
                             <h2 className="text-sm text-gray-400">
                               Instituição:
                             </h2>
-                            <p className="text-sm text-gray-300">
+                            <p className="truncate text-sm text-gray-300">
                               {educationalInstitution.name}
                             </p>
                           </div>

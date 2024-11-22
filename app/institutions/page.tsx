@@ -42,24 +42,32 @@ const EducationalInstitutionsPage = async ({
 
   return (
     <div>
+      {/* HEADER */}
       <Header />
-      <div className="my-6 px-5">
-        <Search />
-      </div>
-      <div className="px-5">
-        <h2 className="mb-3 mt-6 text-xs font-bold uppercase text-gray-400">
-          Resultados para &quot;{searchParams?.title || searchParams?.service}
-          &quot;
-        </h2>
-        <div className="grid grid-cols-2 gap-4">
-          {institutions.map((institution) => (
-            <EducationalInstitutionItem
-              key={institution.id}
-              educationalinstitution={institution}
-            />
-          ))}
+
+      {/* CONTEÚDO PRINCIPAL */}
+      <main className="mx-auto max-w-[1440px] px-4 md:px-8">
+        {/* BUSCA */}
+        <div className="my-6">
+          <Search />
         </div>
-      </div>
+
+        {/* RESULTADOS */}
+        <div>
+          <h2 className="mb-3 text-lg font-bold uppercase text-gray-500">
+            Resultados para &quot;{searchParams?.title || searchParams?.service}
+            &quot;
+          </h2>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+            {institutions.map((institution) => (
+              <EducationalInstitutionItem
+                key={institution.id}
+                educationalinstitution={institution}
+              />
+            ))}
+          </div>
+        </div>
+      </main>
     </div>
   )
 }

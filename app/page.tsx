@@ -28,7 +28,6 @@ const Home = async () => {
       },
     })
     userId = user?.id
-    // userRole = user?.role
   }
 
   // Buscar instituições educacionais no banco de dados
@@ -83,12 +82,17 @@ const Home = async () => {
       {/* HEADER */}
       <Header />
 
-      {/* TEXTO */}
-      <div className="p-5">
-        <h2 className="text-xl font-bold">
-          Olá, {session?.user ? session.user.name : "bem-vindo"}!
-        </h2>
-        <p className="capitalize">{formattedDate}</p>
+      {/* CONTEÚDO PRINCIPAL */}
+      <main className="mx-auto max-w-[1440px] px-4 md:px-8">
+        {/* TEXTO */}
+        <div className="py-6">
+          <h2 className="text-2xl font-bold">
+            Olá, {session?.user ? session.user.name : "bem-vindo"}!
+          </h2>
+          <p className="mt-1 text-sm capitalize text-gray-600">
+            {formattedDate}
+          </p>
+        </div>
 
         {/* BUSCA */}
         <div className="mt-6">
@@ -96,38 +100,38 @@ const Home = async () => {
         </div>
 
         {/* BUSCA RÁPIDA */}
-        <div className="mt-6 flex gap-3 overflow-x-scroll [&::-webkit-scrollbar]:hidden">
+        <div className="mt-6 flex gap-3 overflow-x-auto pb-4 [&::-webkit-scrollbar]:hidden">
           {quickSearchOptions.map((option) => (
             <Button
-              className="gap-2"
-              variant="secondary"
+              className="flex w-fit shrink-0 items-center gap-2 px-4 py-2"
+              variant="outline"
               key={option.title}
               asChild
             >
               <Link href={`/institutions?service=${option.title}`}>
-                {option.title}
+                <span className="text-sm font-medium">{option.title}</span>
               </Link>
             </Button>
           ))}
         </div>
 
         {/* IMAGEM */}
-        <div className="relative mt-6 h-[150px] w-full">
+        <div className="relative mt-6 h-[150px] w-full md:h-[300px]">
           <Image
             alt="Agende com as melhores instituições"
-            className="rounded-xl object-cover"
+            className="rounded-xl"
             fill
             src="/Banner01.jpeg"
           />
         </div>
 
-        {/* AGENDAMENTO */}
+        {/* AGENDAMENTOS */}
         {confirmedBookings.length > 0 && (
-          <>
-            <h2 className="mb-3 mt-6 font-bold uppercase text-gray-400">
-              AGENDAMENTOS
+          <div className="pt-6">
+            <h2 className="mb-3 text-lg font-bold uppercase text-gray-500">
+              Agendamentos
             </h2>
-            <div className="flex gap-3 overflow-x-auto [&::-webkit-scrollbar]:hidden">
+            <div className="flex gap-4 overflow-x-auto pb-4 [&::-webkit-scrollbar]:hidden">
               {confirmedBookings.map((booking) => (
                 <BookingItem
                   key={booking.id}
@@ -135,37 +139,47 @@ const Home = async () => {
                 />
               ))}
             </div>
-          </>
+          </div>
         )}
 
-        <h2 className="mb-3 mt-6 text-xs font-bold uppercase text-gray-400">
-          Recomendados
-        </h2>
-        <div className="flex gap-4 overflow-auto [&::-webkit-scrollbar]:hidden">
-          {educationalInstitutions
-            .filter((institution) => institution.name !== "Faculdade La Salle")
-            .map((educationalInstitutions) => (
-              <EducationalInstitutionItem
-                key={educationalInstitutions.id}
-                educationalinstitution={educationalInstitutions}
-              />
-            ))}
+        {/* RECOMENDADOS */}
+        <div className="pt-6">
+          <h2 className="mb-3 text-lg font-bold uppercase text-gray-500">
+            Recomendados
+          </h2>
+          <div className="flex gap-4 overflow-x-auto pb-4 [&::-webkit-scrollbar]:hidden">
+            {educationalInstitutions
+              .filter(
+                (institution) => institution.name !== "Faculdade La Salle",
+              )
+              .map((educationalInstitutions) => (
+                <EducationalInstitutionItem
+                  key={educationalInstitutions.id}
+                  educationalinstitution={educationalInstitutions}
+                />
+              ))}
+          </div>
         </div>
 
-        <h2 className="mb-3 mt-6 font-bold uppercase text-gray-400">
-          Populares
-        </h2>
-        <div className="flex gap-4 overflow-auto [&::-webkit-scrollbar]:hidden">
-          {popularInstitution
-            .filter((institution) => institution.name !== "Faculdade La Salle")
-            .map((institution) => (
-              <EducationalInstitutionItem
-                key={institution.id}
-                educationalinstitution={institution}
-              />
-            ))}
+        {/* POPULARES */}
+        <div className="pt-6">
+          <h2 className="mb-3 text-lg font-bold uppercase text-gray-500">
+            Populares
+          </h2>
+          <div className="flex gap-4 overflow-x-auto pb-4 [&::-webkit-scrollbar]:hidden">
+            {popularInstitution
+              .filter(
+                (institution) => institution.name !== "Faculdade La Salle",
+              )
+              .map((institution) => (
+                <EducationalInstitutionItem
+                  key={institution.id}
+                  educationalinstitution={institution}
+                />
+              ))}
+          </div>
         </div>
-      </div>
+      </main>
     </div>
   )
 }
