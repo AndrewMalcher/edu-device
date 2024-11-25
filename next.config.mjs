@@ -29,6 +29,9 @@ const nextConfig = {
       {
         hostname: "media.canva.com",
       },
+      {
+        hostname: "www.bcnonline.pt",
+      },
     ],
   },
 }
