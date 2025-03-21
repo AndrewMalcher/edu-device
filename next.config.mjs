@@ -28,7 +28,7 @@ const nextConfig = {
       },
       {
         hostname: "media.canva.com",
-      },
+      }
     ],
   },
 }
