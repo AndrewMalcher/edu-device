@@ -21,6 +21,12 @@ const nextConfig = {
         hostname: "samsungbrshop.vtexassets.com",
       },
       {
+        hostname: "www.bcnonline.pt",
+      },
+      {
+        hostname: "mediaserver.goepson.com",
+      },
+      {
         hostname: "images.unsplash.com",
       },
       {
@@ -28,7 +34,7 @@ const nextConfig = {
       },
       {
         hostname: "media.canva.com",
-      }
+      },
     ],
   },
 }

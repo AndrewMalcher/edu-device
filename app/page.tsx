@@ -149,9 +149,7 @@ const Home = async () => {
           </h2>
           <div className="flex gap-4 overflow-x-auto pb-4 [&::-webkit-scrollbar]:hidden">
             {educationalInstitutions
-              .filter(
-                (institution) => institution.name !== "Faculdade La Salle",
-              )
+              .filter((institution) => institution.name == "Faculdade La Salle")
               .map((educationalInstitutions) => (
                 <EducationalInstitutionItem
                   key={educationalInstitutions.id}
