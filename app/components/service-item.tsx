@@ -30,25 +30,7 @@ interface ServiceItemProps {
   educationalInstitution: Pick<EducationalInstitution, "name">
 }
 
-const TIME_LIST = [
-  "06:45",
-  "07:35",
-  "08:25",
-  "09:15",
-  "10:05",
-  "10:55",
-  "11:45",
-  "12:35",
-  "13:25",
-  "14:15",
-  "15:05",
-  "15:55",
-  "16:45",
-  "17:35",
-  "18:25",
-  "19:15",
-  "20:45",
-]
+const TIME_LIST = ["18:45", "20:45"]
 
 function convertTimeToUTC({
   date,
@@ -161,7 +143,7 @@ const ServiceItem = ({ service, educationalInstitution }: ServiceItemProps) => {
 
   return (
     <>
-      <Card>
+      <Card className="">
         <CardContent className="flex items-center gap-3 p-3">
           {/* IMAGE */}
           <div className="relative max-h-[110px] min-h-[110px] min-w-[110px] max-w-[110px]">
@@ -169,7 +151,7 @@ const ServiceItem = ({ service, educationalInstitution }: ServiceItemProps) => {
               alt={service.name}
               src={service.imageUrl}
               fill
-              sizes="33vw"
+              sizes="32vw"
               className="rounded-lg object-center"
             />
           </div>
@@ -191,15 +173,15 @@ const ServiceItem = ({ service, educationalInstitution }: ServiceItemProps) => {
                 </Button>
 
                 {/* DIREITA */}
-                <SheetContent className="overflow-y-auto px-0">
+                <SheetContent className="px-0">
                   <SheetHeader>
                     <SheetTitle>Fazer Reserva</SheetTitle>
                   </SheetHeader>
-                  <div className="border-b border-solid py-5">
+                  <div className="flex flex-col border-b border-solid py-5">
                     <Calendar
                       mode="single"
                       locale={ptBR}
-                      className="w-full capitalize"
+                      className="flex flex-col capitalize"
                       selected={selectedDay}
                       onSelect={handleDateSelect}
                       fromDate={addDays(new Date(), 2)}
@@ -227,7 +209,7 @@ const ServiceItem = ({ service, educationalInstitution }: ServiceItemProps) => {
                     />
                   </div>
                   {selectedDay && (
-                    <div className="no-scrollbar flex gap-3 overflow-x-auto px-5">
+                    <div className="no-scrollbar flex flex-col gap-3 overflow-x-auto px-5">
                       {availableTimes.length > 0 ? (
                         <div className="flex gap-3 overflow-x-auto border-b border-solid p-5 [&::-webkit-scrollbar]:hidden">
                           {availableTimes.map((time) => (
