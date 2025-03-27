@@ -30,7 +30,7 @@ interface ServiceItemProps {
   educationalInstitution: Pick<EducationalInstitution, "name">
 }
 
-const TIME_LIST = ["18:45", "20:45"]
+const TIME_LIST = ["14:00", "18:45", "20:45"]
 
 function convertTimeToUTC({
   date,
