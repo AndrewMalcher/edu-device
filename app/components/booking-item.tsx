@@ -65,8 +65,8 @@ const BookingItem = ({ booking }: BookingItemProps) => {
 
   return (
     <Sheet open={isSheetOpen} onOpenChange={handleSheetOpenChange}>
-      <SheetTrigger className="w-full min-w-[90%]">
-        <Card className="min-w-[90%]">
+      <SheetTrigger className="w-full max-w-[90%]">
+        <Card className="w-full">
           <CardContent className="flex justify-between p-0">
             {/* ESQUERDA */}
             <div className="items-left flex flex-col gap-2 py-5 pl-5">
@@ -110,7 +110,7 @@ const BookingItem = ({ booking }: BookingItemProps) => {
           </CardContent>
         </Card>
       </SheetTrigger>
-      <SheetContent className="w-[85%]">
+      <SheetContent className="min-h-[90vh] overflow-y-auto">
         <SheetHeader>
           <SheetTitle className="border-b border-solid text-left">
             Informações da Reserva

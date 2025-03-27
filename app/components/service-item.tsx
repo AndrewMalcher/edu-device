@@ -173,9 +173,11 @@ const ServiceItem = ({ service, educationalInstitution }: ServiceItemProps) => {
                 </Button>
 
                 {/* DIREITA */}
-                <SheetContent className="px-0">
+                <SheetContent className="min-h-[80vh] overflow-y-auto px-0">
                   <SheetHeader>
-                    <SheetTitle>Fazer Reserva</SheetTitle>
+                    <SheetTitle className="overflow-y-auto">
+                      Fazer Reserva
+                    </SheetTitle>
                   </SheetHeader>
                   <div className="flex flex-col border-b border-solid py-5">
                     <Calendar
@@ -278,7 +280,7 @@ const ServiceItem = ({ service, educationalInstitution }: ServiceItemProps) => {
                       </Card>
                     </div>
                   )}
-                  <SheetFooter className="mt-5 px-5">
+                  <SheetFooter className="px-5">
                     <Button
                       onClick={handleCreateBooking}
                       disabled={!selectedDay || !selectedTime || !classroom}
